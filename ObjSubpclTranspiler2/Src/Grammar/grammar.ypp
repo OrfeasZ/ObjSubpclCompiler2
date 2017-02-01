@@ -8,6 +8,7 @@
 %token AND ARRAY BEGINT DIV DO ELSE END IF INTEGER MOD NOT OF OR PROCEDURE PROGRAM REAL
 %token RETURN THEN VAR WHILE LPAREN RPAREN STAR PLUS COMMA MINUS DOT SLASH COLON ASSIGN
 %token SEMICOLON LT LTE NOTEQUAL EQUAL GT GTE LBRACK RBRACK
+%token CLASS EXTENDS CONSTRUCTOR
 %token <string> UNSIGNED_INTEGER
 %token <string> IDENTIFIER
 
@@ -49,7 +50,16 @@ local_seq
 
 local
 	: VAR id_decl
-	| header SEMICOLON body SEMICOLON
+	| procedure
+	;
+
+procedure_seq
+	: procedure
+	| procedure_seq procedure
+	;
+
+procedure
+	: header SEMICOLON body SEMICOLON
 	;
 
 id_decl
@@ -167,4 +177,30 @@ integer_const
 
 real_const
 	: UNSIGNED_INTEGER DOT UNSIGNED_INTEGER { /*$$ = new Real(*$1, *$3); delete $1; delete $3;*/ }
+	;
+
+/* Class additions */
+
+class_def
+	: class_header VAR id_decl class_body
+	| class_header class_body
+	;
+
+class_header
+	: CLASS id 
+	| CLASS id EXTENDS id
+	;
+
+class_body
+	: BEGINT class_constructor procedure_seq END
+	| BEGINT class_constructor END
+	;
+
+class_constructor
+	: class_constructor_header SEMICOLON body SEMICOLON
+	;
+
+class_constructor_header
+	: PROCEDURE CONSTRUCTOR LPAREN formal_seq RPAREN
+	| PROCEDURE CONSTRUCTOR LPAREN RPAREN
 	;

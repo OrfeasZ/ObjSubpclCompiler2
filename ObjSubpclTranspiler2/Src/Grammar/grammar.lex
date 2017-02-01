@@ -48,6 +48,9 @@ return 					return(RETURN);
 then 					return(THEN);
 var 					return(VAR);
 while 					return(WHILE);
+class					return(CLASS);
+extends					return(EXTENDS);
+constructor				return(CONSTRUCTOR);
 
 "("						return(LPAREN);
 ")"						return(RPAREN);
