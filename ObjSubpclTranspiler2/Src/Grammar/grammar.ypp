@@ -69,6 +69,11 @@ procedure_seq
 procedure
 	: header SEMICOLON procedure_body SEMICOLON
 	;
+	
+procedure_body
+	: VAR id_decl block
+	| block
+	;
 
 id_decl
 	: id_seq COLON type SEMICOLON
@@ -100,11 +105,6 @@ type
 	| REAL
 	| ARRAY LBRACK integer_const RBRACK OF type
 	| class_type
-	;
-
-class_type
-	: id LPAREN RPAREN
-	| id LPAREN expr_seq RPAREN
 	;
 
 block
@@ -238,4 +238,9 @@ class_constructor
 class_constructor_header
 	: PROCEDURE CONSTRUCTOR LPAREN formal_seq RPAREN
 	| PROCEDURE CONSTRUCTOR LPAREN RPAREN
+	;
+
+class_type
+	: id LPAREN RPAREN
+	| id LPAREN expr_seq RPAREN
 	;
