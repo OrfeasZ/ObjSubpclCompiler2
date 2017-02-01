@@ -1,6 +1,6 @@
 %{
 	#include <Parser/Parser.h>
-
+	
 	extern int yylex();
 	extern void yyerror(const char* err);
 %}
@@ -39,26 +39,14 @@ program
 	;
 
 body 
-	: local_seq class_seq block
-	| local_seq block
+	: VAR id_decl procedure_seq class_seq block
+	| VAR id_decl class_seq block
+	| VAR id_decl procedure_seq block
+	| VAR id_decl block
+	| procedure_seq class_seq block
+	| procedure_seq block
 	| class_seq block
-	| class_seq 
 	| block
-	;
-
-procedure_body
-	: local_seq block
-	| block
-	;
-
-local_seq
-	: local
-	| local_seq local
-	;
-
-local
-	: VAR id_decl
-	| procedure
 	;
 
 procedure_seq
