@@ -31,204 +31,205 @@
 %%
 
 file
-	: program
+	: program { Parser::Parser::SetProgram($1); }
 	;
 
 program
-	: PROGRAM id SEMICOLON body DOT
+	: PROGRAM id SEMICOLON body DOT { $$ = new Program($2, $4); }
 	;
 
 body 
-	: VAR id_decl procedure_seq class_seq block
-	| VAR id_decl class_seq block
-	| VAR id_decl procedure_seq block
-	| VAR id_decl block
-	| procedure_seq class_seq block
-	| procedure_seq block
-	| class_seq block
-	| block
+	: VAR id_decl procedure_seq class_seq block { $$ = new Body($5, $2, $3, $4); }
+	| VAR id_decl class_seq block { $$ = new Body($4, $2, nullptr, $3); }
+	| VAR id_decl procedure_seq block { $$ = new Body($4, $2, $3); }
+	| VAR id_decl block { $$ = new Body($3, $2); }
+	| procedure_seq class_seq block { $$ = new Body($3, nullptr, $1, $2); }
+	| procedure_seq block { $$ = new Body($2, nullptr, $1); }
+	| class_seq block { $$ = new Body($2, nullptr, nullptr, $1); }
+	| block { $$ = new Body($1); }
 	;
 
 procedure_seq
-	: procedure
-	| procedure_seq procedure
+	: procedure { $$ = new ProcedureSeq(); $$->push_back($1); }
+	| procedure_seq procedure { $$->push_back($2); }
 	;
 
 procedure
-	: header SEMICOLON procedure_body SEMICOLON
+	: header SEMICOLON procedure_body SEMICOLON { $$ = new Procedure($1, $3); }
 	;
 	
 procedure_body
-	: VAR id_decl block
-	| block
+	: VAR id_decl block { $$ = new ProcedureBody($3, $2); }
+	| block { $$ = new ProcedureBody($1); }
 	;
 
 id_decl
-	: id_seq COLON type SEMICOLON
-	| id_decl id_seq COLON type SEMICOLON
+	: id_seq COLON type SEMICOLON { $$ = new IDDeclaration(); $$->push_back(new VarialeDeclaration($1, $3)); }
+	| id_decl id_seq COLON type SEMICOLON { $$->push_back(new VariableDeclaration($2, $4)); }
 	;
 
 header
-	: PROCEDURE id LPAREN formal_seq RPAREN
-	| PROCEDURE id LPAREN RPAREN
+	: PROCEDURE id LPAREN formal_seq RPAREN { $$ = new ProcedureHeader($2, $4); }
+	| PROCEDURE id LPAREN RPAREN { $$ = new ProcedureHeader($2); }
 	;
 
 formal_seq
-	: formal
-	| formal_seq SEMICOLON formal
+	: formal { $$ = new ParameterSeq(); $$->push_back($1); }
+	| formal_seq SEMICOLON formal { $$->push_back($3); }
 	;
 
 formal
-	: VAR id_seq COLON type
-	| id_seq COLON type
+	: VAR id_seq COLON type { $$ = new VariableDeclaration($2, $4); }
+	| id_seq COLON type { $$ = new VariableDeclaration($1, $3); }
 	;
 
 id_seq
-	: id 
-	| id_seq COMMA id
+	: id { $$ = new IDSeq(); $$->push_back($1); }
+	| id_seq COMMA id { $$->push_back($3); }
 	;
 
 type
-	: INTEGER
-	| REAL
-	| ARRAY LBRACK integer_const RBRACK OF type
-	| class_type
+	: INTEGER { $$ = new VariableType(VariableTypes::Integer); }
+	| REAL { $$ = new VariableType(VariableTypes::Real); }
+	| ARRAY LBRACK integer_const RBRACK OF type { $$ = new ArrayVariableType($6, $3); }
+	| class_type { $$ = $1; }
 	;
 
 block
-	: BEGINT stmt_seq END
+	: BEGINT stmt_seq END { $$ = $2; }
 	;
 
 stmt_seq
-	: stmt
-	| stmt_seq SEMICOLON stmt
+	: stmt { $$ = new StatementSeq(); $$->push_back($1); }
+	| stmt_seq SEMICOLON stmt { $$->push_back($3); }
 	;
 
 stmt
-	: 
-	| l_value ASSIGN expr
-	| block
-	| call
-	| IF expr THEN stmt ELSE stmt
-	| IF expr THEN stmt
-	| WHILE expr DO stmt
-	| id COLON stmt
-	| RETURN
+	: { $$ = nullptr; }
+	| l_value ASSIGN expr { $$ = new AssignmentStatement($1, $3); }
+	| block { $$ = $1; }
+	| call { $$ = $1; }
+	| IF expr THEN stmt ELSE stmt { $$ = new IfStatement($2, $4, $6); }
+	| IF expr THEN stmt { $$ = new IfStatement($2, $4); }
+	| WHILE expr DO stmt { $$ = new WhileStatement($2, $4); }
+	| RETURN { $$ = new ReturnStatement(); }
 	;
 
 expr
-	: l_value
-	| r_value
+	: l_value { $$ = $1; }
+	| r_value { $$ = $1; }
 	;
 
 l_value
-	: id
-	| id DOT id
-	| l_value LBRACK expr RBRACK
-	| LPAREN l_value RPAREN
+	: id { $$ = new IDExpression($1); }
+	| l_value LBRACK expr RBRACK { $$ = new ArrayExpression($1, $3); }
+	| l_value DOT id { $$ = new MemberValue($1, $3); }
+	| LPAREN l_value RPAREN { $$ = $2; } 
 	;
 
 r_value
-	: integer_const
-	| real_const
-	| LPAREN r_value RPAREN
-	| call
-	| unop
-	| binop
+	: integer_const { $$ = $1; }
+	| real_const { $$ = $1; }
+	| LPAREN r_value RPAREN { $$ = $2; }
+	| call { $$ = $1; }
+	| unop { $$ = $1; }
+	| binop { $$ = $1; }
 	;
 
+// TODO: Verify this works.
 call
-	: id LPAREN RPAREN
-	| id LPAREN expr_seq RPAREN
-	| id DOT id LPAREN RPAREN
-	| id DOT id LPAREN expr_seq RPAREN
+	: id LPAREN RPAREN { $$ = new Call($1); }
+	| id LPAREN expr_seq RPAREN { $$ = new Call($1, $3); }
+	| l_value DOT id LPAREN RPAREN { $$ = new MemberCall($1, $3); }
+	| l_value DOT id LPAREN expr_seq RPAREN { $$ = new MemberCall($1, $3, $5); }
 	;
 
 expr_seq
-	: expr
-	| expr_seq COMMA expr
+	: expr { $$ = new ExpressionSeq(); $$->push_back($1); }
+	| expr_seq COMMA expr { $$->push_back($3); }
 	;
 
 unop
-	: NOT expr
-	| UPLUS expr
-	| UMINUS expr
+	: NOT expr { $$ = new UnaryExpression($2, UnaryExpressions::Not); }
+	| UPLUS expr %prec UPLUS { $$ = new UnaryExpression($2, UnaryExpressions::Plus); }
+	| UMINUS expr %prec UMINUS { $$ = new UnaryExpression($2, UnaryExpressions::Minus); }
 	;
 
 binop
-	: expr PLUS expr
-	| expr MINUS expr
-	| expr STAR expr
-	| expr SLASH expr
-	| expr DIV expr
-	| expr MOD expr
-	| expr OR expr
-	| expr AND expr
-	| expr EQUAL expr
-	| expr NOTEQUAL expr
-	| expr LT expr
-	| expr LTE expr
-	| expr GT expr
-	| expr GTE expr
+	: expr PLUS expr { $$ = new BinaryExpression($1, $3, BinaryExpressions::Plus); }
+	| expr MINUS expr { $$ = new BinaryExpression($1, $3, BinaryExpressions::Minus); }
+	| expr STAR expr { $$ = new BinaryExpression($1, $3, BinaryExpressions::Multiply); }
+	| expr SLASH expr { $$ = new BinaryExpression($1, $3, BinaryExpressions::Divide); }
+	| expr DIV expr { $$ = new BinaryExpression($1, $3, BinaryExpressions::Div); }
+	| expr MOD expr { $$ = new BinaryExpression($1, $3, BinaryExpressions::Mod); }
+	| expr OR expr { $$ = new BinaryExpression($1, $3, BinaryExpressions::Or); }
+	| expr AND expr { $$ = new BinaryExpression($1, $3, BinaryExpressions::And); }
+	| expr EQUAL expr { $$ = new BinaryExpression($1, $3, BinaryExpressions::Equal); }
+	| expr NOTEQUAL expr { $$ = new BinaryExpression($1, $3, BinaryExpressions::NotEqual); }
+	| expr LT expr { $$ = new BinaryExpression($1, $3, BinaryExpressions::LessThan); }
+	| expr LTE expr { $$ = new BinaryExpression($1, $3, BinaryExpressions::LessThanEqual); }
+	| expr GT expr { $$ = new BinaryExpression($1, $3, BinaryExpressions::GreaterThan); }
+	| expr GTE expr { $$ = new BinaryExpression($1, $3, BinaryExpressions::GreaterThanEqual); }
 	;
 
 id 
-	: IDENTIFIER { /*$$ = new Identifier(*$1); delete $1;*/ }
+	: IDENTIFIER { $$ = new Identifier(*$1); delete $1; }
 	;
 
 integer_const
-	: UNSIGNED_INTEGER { /*$$ = new Integer(*$1); delete $1;*/ }
+	: UNSIGNED_INTEGER { $$ = new Integer(*$1); delete $1; }
 	;
 
 real_const
-	: UNSIGNED_INTEGER DOT UNSIGNED_INTEGER { /*$$ = new Real(*$1, *$3); delete $1; delete $3;*/ }
+	: UNSIGNED_INTEGER DOT UNSIGNED_INTEGER { $$ = new Real(*$1, *$3); delete $1; delete $3; }
 	;
 
 /* Class additions */
 
 class_procedure_seq
-	: class_procedure
-	| class_procedure_seq class_procedure
+	: class_procedure { $$ = new ProcedureSeq(); $$->push_back($1); }
+	| class_procedure_seq class_procedure { $$->push_back($2); }
 	;
 
 class_procedure
-	: procedure
-	| abstract_procedure
+	: procedure { $$ = $1; }
+	| abstract_procedure { $$ = $1; }
 	;
 
 abstract_procedure
-	: ABSTRACT header SEMICOLON
+	: ABSTRACT header SEMICOLON { $$ = new AbstractProcedure($2); }
+	;
 
 class_seq
-	: class_def
-	| class_seq class_def
+	: class_def { $$ = new ClassSeq(); $$->push_back($1); }
+	| class_seq class_def { $$->push_back($2); }
 	;
 
 class_def
-	: class_header VAR id_decl class_body SEMICOLON
-	| class_header class_body SEMICOLON
+	: class_header VAR id_decl class_body SEMICOLON { $$ = new ClassDefinition($1, $3, $4); }
+	| class_header class_body SEMICOLON { $$ = new ClassDefinition($1, nullptr, $2); }
 	;
 
 class_header
-	: CLASS id 
-	| CLASS id EXTENDS id
+	: CLASS id { $$ = new ClassHeader($2); }
+	| CLASS id EXTENDS id { $$ = new ClassHeader($2, $4); }
 	;
 
 class_body
-	: BEGINT class_constructor class_procedure_seq END
-	| BEGINT class_constructor END
+	: BEGINT class_constructor class_procedure_seq END { $$ = new ClassBody($2, $3); }
+	| BEGINT class_constructor END { $$ = new ClassBody($2); }
 	;
 
 class_constructor
-	: class_constructor_header SEMICOLON procedure_body SEMICOLON
+	: class_constructor_header SEMICOLON procedure_body SEMICOLON { $$ = new Procedure($1, $3); }
 	;
 
 class_constructor_header
-	: PROCEDURE CONSTRUCTOR LPAREN formal_seq RPAREN
-	| PROCEDURE CONSTRUCTOR LPAREN RPAREN
+	: PROCEDURE CONSTRUCTOR LPAREN formal_seq RPAREN { $$ = new ProcedureHeader("constructor", $4); }
+	| PROCEDURE CONSTRUCTOR LPAREN RPAREN { $$ = new ProcedureHeader("constructor"); }
 	;
 
 class_type
-	: id LPAREN RPAREN
-	| id LPAREN expr_seq RPAREN
+	: id LPAREN RPAREN { $$ = new ClassVariableType($1); }
+	| id LPAREN expr_seq RPAREN { $$ = new ClassVariableType($1, $3); }
 	;
