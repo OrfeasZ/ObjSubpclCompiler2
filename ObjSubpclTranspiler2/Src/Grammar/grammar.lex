@@ -51,6 +51,7 @@ while 					return(WHILE);
 class					return(CLASS);
 extends					return(EXTENDS);
 constructor				return(CONSTRUCTOR);
+abstract				return(ABSTRACT);
 
 "("						return(LPAREN);
 ")"						return(RPAREN);

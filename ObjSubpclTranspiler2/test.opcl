@@ -1,0 +1,60 @@
+program something;
+	var a, b : integer;
+		c : real;
+		cc : Test();
+		cc2 : Test2(a, b);
+		cc3 : Test(1 + 2, 5);
+
+	procedure A();
+	var blah : real;
+	begin
+
+	end;
+
+	class Test
+	var d : real;
+		e, f : integer;
+		g : array[10] of integer;
+
+	begin		
+		procedure constructor(x, y : real);
+		begin
+
+		end;
+
+		abstract procedure huhwhat();
+
+		procedure whatever();
+		var test2 : integer;
+		begin
+			test2 := 1 + 5;
+			a := b / d;
+			A(asd);
+		end;
+	end;
+
+	class Test2 extends Test
+	begin
+		procedure constructor(a, b : array[1] of real);
+		begin
+
+		end;
+
+		procedure huhwhat();
+		begin
+			y := 1245;
+		end;
+
+		procedure lol();
+		begin
+			x := 123;
+		end;
+	end;
+
+	begin
+		cc.whatever();
+		cc.whatever(12 + 13, 15, cc.test);
+
+		cc.pancakes := nickisafgt;
+	end
+.

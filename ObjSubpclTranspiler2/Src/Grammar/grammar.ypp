@@ -8,7 +8,7 @@
 %token AND ARRAY BEGINT DIV DO ELSE END IF INTEGER MOD NOT OF OR PROCEDURE PROGRAM REAL
 %token RETURN THEN VAR WHILE LPAREN RPAREN STAR PLUS COMMA MINUS DOT SLASH COLON ASSIGN
 %token SEMICOLON LT LTE NOTEQUAL EQUAL GT GTE LBRACK RBRACK
-%token CLASS EXTENDS CONSTRUCTOR
+%token CLASS EXTENDS CONSTRUCTOR ABSTRACT
 %token <string> UNSIGNED_INTEGER
 %token <string> IDENTIFIER
 
@@ -39,6 +39,14 @@ program
 	;
 
 body 
+	: local_seq class_seq block
+	| local_seq block
+	| class_seq block
+	| class_seq 
+	| block
+	;
+
+procedure_body
 	: local_seq block
 	| block
 	;
@@ -59,7 +67,7 @@ procedure_seq
 	;
 
 procedure
-	: header SEMICOLON body SEMICOLON
+	: header SEMICOLON procedure_body SEMICOLON
 	;
 
 id_decl
@@ -91,6 +99,12 @@ type
 	: INTEGER
 	| REAL
 	| ARRAY LBRACK integer_const RBRACK OF type
+	| class_type
+	;
+
+class_type
+	: id LPAREN RPAREN
+	| id LPAREN expr_seq RPAREN
 	;
 
 block
@@ -121,6 +135,7 @@ expr
 
 l_value
 	: id
+	| id DOT id
 	| l_value LBRACK expr RBRACK
 	| LPAREN l_value RPAREN
 	;
@@ -137,6 +152,8 @@ r_value
 call
 	: id LPAREN RPAREN
 	| id LPAREN expr_seq RPAREN
+	| id DOT id LPAREN RPAREN
+	| id DOT id LPAREN expr_seq RPAREN
 	;
 
 expr_seq
@@ -146,8 +163,8 @@ expr_seq
 
 unop
 	: NOT expr
-	| PLUS expr
-	| MINUS expr
+	| UPLUS expr
+	| UMINUS expr
 	;
 
 binop
@@ -181,9 +198,27 @@ real_const
 
 /* Class additions */
 
+class_procedure_seq
+	: class_procedure
+	| class_procedure_seq class_procedure
+	;
+
+class_procedure
+	: procedure
+	| abstract_procedure
+	;
+
+abstract_procedure
+	: ABSTRACT header SEMICOLON
+
+class_seq
+	: class_def
+	| class_seq class_def
+	;
+
 class_def
-	: class_header VAR id_decl class_body
-	| class_header class_body
+	: class_header VAR id_decl class_body SEMICOLON
+	| class_header class_body SEMICOLON
 	;
 
 class_header
@@ -192,12 +227,12 @@ class_header
 	;
 
 class_body
-	: BEGINT class_constructor procedure_seq END
+	: BEGINT class_constructor class_procedure_seq END
 	| BEGINT class_constructor END
 	;
 
 class_constructor
-	: class_constructor_header SEMICOLON body SEMICOLON
+	: class_constructor_header SEMICOLON procedure_body SEMICOLON
 	;
 
 class_constructor_header
