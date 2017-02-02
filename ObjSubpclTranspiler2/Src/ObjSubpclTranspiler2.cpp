@@ -39,6 +39,8 @@ int main(int argc, char* argv[])
 	fclose(yyin);
 	yyin = nullptr;
 
+	getchar();
+
     return 0;
 }
 

@@ -140,7 +140,7 @@ procedure_body
 	;
 
 id_decl
-	: id_seq COLON type SEMICOLON { $$ = new IDDeclaration(); $$->push_back(new VarialeDeclaration($1, $3)); }
+	: id_seq COLON type SEMICOLON { $$ = new IDDeclaration(); $$->push_back(new VariableDeclaration($1, $3)); }
 	| id_decl id_seq COLON type SEMICOLON { $$->push_back(new VariableDeclaration($2, $4)); }
 	;
 
