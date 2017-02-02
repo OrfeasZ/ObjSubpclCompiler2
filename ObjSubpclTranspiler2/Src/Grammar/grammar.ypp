@@ -8,13 +8,89 @@
 %token AND ARRAY BEGINT DIV DO ELSE END IF INTEGER MOD NOT OF OR PROCEDURE PROGRAM REAL
 %token RETURN THEN VAR WHILE LPAREN RPAREN STAR PLUS COMMA MINUS DOT SLASH COLON ASSIGN
 %token SEMICOLON LT LTE NOTEQUAL EQUAL GT GTE LBRACK RBRACK
-%token CLASS EXTENDS CONSTRUCTOR ABSTRACT
+%token CLASS EXTENDS CONSTRUCTOR ABSTRACT DYNAMIC
 %token <string> UNSIGNED_INTEGER
 %token <string> IDENTIFIER
 
 %union {
 	std::string* string;
+
+	::Parser::Identifier* id;
+	::Parser::Integer* integer_const;
+	::Parser::Real* real_const;
+
+	::Parser::Program* program; 
+	::Parser::Body* body;
+	::Parser::ProcedureSeq* procedure_seq;
+	::Parser::Procedure* procedure;
+	::Parser::ProcedureBody* procedure_body;
+	::Parser::IDDeclaration* id_decl;
+	::Parser::ProcedureHeader* header;
+	::Parser::ParameterSeq* formal_seq;
+	::Parser::VariableDeclaration* formal;
+	::Parser::IDSeq* id_seq;
+	::Parser::VariableType* type;
+	::Parser::StatementSequence* block;
+	::Parser::StatementSequence* stmt_seq;
+	::Parser::IStatement* stmt;
+	::Parser::IExpression* expr;
+	::Parser::IExpression* l_value;
+	::Parser::IExpression* r_value;
+	::Parser::Call* call;
+	::Parser::ExpressionSequence* expr_seq;
+	::Parser::UnaryExpression* unop;
+	::Parser::BinaryExpression* binop;
+
+	::Parser::ProcedureSeq* class_procedure_seq;
+	::Parser::Procedure* class_procedure;
+	::Parser::AbstractProcedure* abstract_procedure;
+	::Parser::Procedure* dynamic_procedure;
+	::Parser::ClassSeq* class_seq;
+	::Parser::ClassDefinition* class_def;
+	::Parser::ClassHeader* class_header;
+	::Parser::ClassBody* class_body;
+	::Parser::Procedure* class_constructor;
+	::Parser::ProcedureHeader* class_constructor_header;
+	::Parser::ClassVariableType* class_type;
 }
+
+%type <id> id
+%type <integer_const> integer_const
+%type <real_const> real_const
+
+%type <program> program
+%type <body> body
+%type <procedure_seq> procedure_seq
+%type <procedure> procedure
+%type <procedure_body> procedure_body
+%type <id_decl> id_decl
+%type <header> header
+%type <formal_seq> formal_seq
+%type <formal> formal
+%type <id_seq> id_seq
+%type <type> type
+%type <block> block
+%type <stmt_seq> stmt_seq
+%type <stmt> stmt
+%type <expr> expr
+%type <l_value> l_value
+%type <r_value> r_value
+%type <call> call
+%type <expr_seq> expr_seq
+%type <unop> unop
+%type <binop> binop
+
+%type <class_procedure_seq> class_procedure_seq
+%type <class_procedure> class_procedure
+%type <abstract_procedure> abstract_procedure
+%type <dynamic_procedure> dynamic_procedure
+%type <class_seq> class_seq
+%type <class_def> class_def
+%type <class_header> class_header
+%type <class_body> class_body
+%type <class_constructor> class_constructor
+%type <class_constructor_header> class_constructor_header
+%type <class_type> class_type
 
 %left OR
 %left AND
@@ -194,10 +270,15 @@ class_procedure_seq
 class_procedure
 	: procedure { $$ = $1; }
 	| abstract_procedure { $$ = $1; }
+	| dynamic_procedure { $$ = $1; }
 	;
 
 abstract_procedure
 	: ABSTRACT header SEMICOLON { $$ = new AbstractProcedure($2); }
+	;
+	
+dynamic_procedure
+	: DYNAMIC procedure { $$ = $2; $$->SetDynamic(true); }
 	;
 
 class_seq

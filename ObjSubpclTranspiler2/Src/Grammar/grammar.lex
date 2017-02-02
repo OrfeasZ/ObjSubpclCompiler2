@@ -52,6 +52,7 @@ class					return(CLASS);
 extends					return(EXTENDS);
 constructor				return(CONSTRUCTOR);
 abstract				return(ABSTRACT);
+dynamic					return(DYNAMIC);
 
 "("						return(LPAREN);
 ")"						return(RPAREN);
