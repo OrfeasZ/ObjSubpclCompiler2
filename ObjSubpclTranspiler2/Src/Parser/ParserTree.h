@@ -2,7 +2,6 @@
 
 #include <Misc/StdAfx.h>
 
-#include "AbstractProcedure.h"
 #include "ArrayExpression.h"
 #include "ArrayVariableType.h"
 #include "AssignmentStatement.h"

@@ -8,9 +8,19 @@ namespace Parser
 		public IParserType
 	{
 	public:
+		IDExpression(Identifier* p_ID) :
+			m_ID(p_ID)
+		{
+
+		}
+
+	public:
 		virtual void Generate()
 		{
 
 		}
+
+	public:
+		Identifier* m_ID;
 	};
 }

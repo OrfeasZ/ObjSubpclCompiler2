@@ -110,7 +110,6 @@ bison -d grammar.ypp</Command>
   <ItemGroup>
     <ClInclude Include="Src\Grammar\grammar.tab.hpp" />
     <ClInclude Include="Src\Misc\StdAfx.h" />
-    <ClInclude Include="Src\Parser\AbstractProcedure.h" />
     <ClInclude Include="Src\Parser\ArrayExpression.h" />
     <ClInclude Include="Src\Parser\ArrayVariableType.h" />
     <ClInclude Include="Src\Parser\AssignmentStatement.h" />

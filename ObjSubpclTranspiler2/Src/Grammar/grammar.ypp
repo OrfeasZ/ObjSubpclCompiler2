@@ -276,11 +276,11 @@ class_procedure
 	;
 
 abstract_procedure
-	: ABSTRACT header SEMICOLON { $$ = new AbstractProcedure($2); }
+	: ABSTRACT header SEMICOLON { $$ = new Procedure($2); $$->SetType(ProcedureType::Abstract); }
 	;
 	
 dynamic_procedure
-	: DYNAMIC procedure { $$ = $2; $$->SetDynamic(true); }
+	: DYNAMIC procedure { $$ = $2; $$->SetType(ProcedureType::Dynamic); }
 	;
 
 class_seq
