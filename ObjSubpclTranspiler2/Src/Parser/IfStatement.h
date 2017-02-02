@@ -1,11 +1,11 @@
 #pragma once
 
-#include "IParserType.h"
+#include "IStatement.h"
 
 namespace Parser
 {
 	class IfStatement :
-		public IParserType
+		public IStatement
 	{
 	public:
 

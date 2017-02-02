@@ -1,11 +1,11 @@
 #pragma once
 
-#include "IParserType.h"
+#include "Procedure.h"
 
 namespace Parser
 {
 	class AbstractProcedure :
-		public IParserType
+		public Procedure
 	{
 	public:
 

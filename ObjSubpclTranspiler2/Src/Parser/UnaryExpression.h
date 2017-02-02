@@ -1,13 +1,26 @@
 #pragma once
 
-#include "IParserType.h"
+#include "IExpression.h"
 
 namespace Parser
 {
+	namespace UnaryExpressions
+	{
+		enum type
+		{
+			Not,
+			Plus,
+			Minus
+		};
+	}
+
 	class UnaryExpression :
-		public IParserType
+		public IExpression
 	{
 	public:
+		virtual void Generate()
+		{
 
+		}
 	};
 }

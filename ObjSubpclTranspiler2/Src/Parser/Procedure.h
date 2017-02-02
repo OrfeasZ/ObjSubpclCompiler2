@@ -8,7 +8,10 @@ namespace Parser
 		public IParserType
 	{
 	public:
+		virtual void Generate()
+		{
 
+		}
 	};
 
 	typedef std::vector<Procedure*> ProcedureSeq;

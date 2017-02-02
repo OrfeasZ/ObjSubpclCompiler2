@@ -1,8 +1,10 @@
 %{
-	#include <Parser/Parser.h>
+	#include <Parser/ParserTree.h>
 	
 	extern int yylex();
 	extern void yyerror(const char* err);
+
+	using namespace Parser;
 %}
 
 %token AND ARRAY BEGINT DIV DO ELSE END IF INTEGER MOD NOT OF OR PROCEDURE PROGRAM REAL
@@ -24,20 +26,20 @@
 	::Parser::ProcedureSeq* procedure_seq;
 	::Parser::Procedure* procedure;
 	::Parser::ProcedureBody* procedure_body;
-	::Parser::IDDeclaration* id_decl;
+	::Parser::VariableSeq* id_decl;
 	::Parser::ProcedureHeader* header;
-	::Parser::ParameterSeq* formal_seq;
+	::Parser::VariableSeq* formal_seq;
 	::Parser::VariableDeclaration* formal;
 	::Parser::IDSeq* id_seq;
 	::Parser::VariableType* type;
-	::Parser::StatementSequence* block;
-	::Parser::StatementSequence* stmt_seq;
+	::Parser::StatementSeq* block;
+	::Parser::StatementSeq* stmt_seq;
 	::Parser::IStatement* stmt;
 	::Parser::IExpression* expr;
 	::Parser::IExpression* l_value;
 	::Parser::IExpression* r_value;
 	::Parser::Call* call;
-	::Parser::ExpressionSequence* expr_seq;
+	::Parser::ExpressionSeq* expr_seq;
 	::Parser::UnaryExpression* unop;
 	::Parser::BinaryExpression* binop;
 
@@ -107,7 +109,7 @@
 %%
 
 file
-	: program { Parser::Parser::SetProgram($1); }
+	: program { Parser::ParserTree::SetProgram($1); }
 	;
 
 program
@@ -140,7 +142,7 @@ procedure_body
 	;
 
 id_decl
-	: id_seq COLON type SEMICOLON { $$ = new IDDeclaration(); $$->push_back(new VariableDeclaration($1, $3)); }
+	: id_seq COLON type SEMICOLON { $$ = new VariableSeq(); $$->push_back(new VariableDeclaration($1, $3)); }
 	| id_decl id_seq COLON type SEMICOLON { $$->push_back(new VariableDeclaration($2, $4)); }
 	;
 
@@ -150,7 +152,7 @@ header
 	;
 
 formal_seq
-	: formal { $$ = new ParameterSeq(); $$->push_back($1); }
+	: formal { $$ = new VariableSeq(); $$->push_back($1); }
 	| formal_seq SEMICOLON formal { $$->push_back($3); }
 	;
 

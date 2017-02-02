@@ -1,13 +1,37 @@
 #pragma once
 
-#include "IParserType.h"
+#include "IExpression.h"
 
 namespace Parser
 {
+	namespace BinaryExpressions
+	{
+		enum type
+		{
+			Plus,
+			Minus,
+			Multiply,
+			Divide,
+			Div,
+			Mod,
+			Or,
+			And,
+			Equal,
+			NotEqual,
+			LessThan,
+			LessThanEqual,
+			GreaterThan,
+			GreaterThanEqual
+		};
+	}
+
 	class BinaryExpression :
-		public IParserType
+		public IExpression
 	{
 	public:
+		virtual void Generate()
+		{
 
+		}
 	};
 }

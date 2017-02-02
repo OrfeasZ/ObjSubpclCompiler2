@@ -8,6 +8,9 @@ namespace Parser
 		public IParserType
 	{
 	public:
+		virtual void Generate()
+		{
 
+		}
 	};
 }

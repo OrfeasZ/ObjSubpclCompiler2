@@ -1,7 +1,7 @@
 %{
 #include <stdio.h>
 #include <string>
-#include <Parser/Parser.h>
+#include <Parser/ParserTree.h>
 #include "grammar.tab.hpp"
 
 extern "C" int yywrap();

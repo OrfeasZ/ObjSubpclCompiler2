@@ -1,13 +1,16 @@
 #pragma once
 
-#include "IParserType.h"
+#include "VariableType.h"
 
 namespace Parser
 {
 	class ClassVariableType :
-		public IParserType
+		public VariableType
 	{
 	public:
+		virtual void Generate()
+		{
 
+		}
 	};
 }

@@ -11,5 +11,9 @@ namespace Parser
 
 	};
 
-	typedef std::vector<IStatement*> StatementSeq;
+	class StatementSeq :
+		public std::vector<IStatement*>,
+		public IStatement
+	{
+	};
 }

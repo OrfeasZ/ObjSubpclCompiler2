@@ -121,7 +121,6 @@ bison -d grammar.ypp</Command>
     <ClInclude Include="Src\Parser\ClassDefinition.h" />
     <ClInclude Include="Src\Parser\ClassHeader.h" />
     <ClInclude Include="Src\Parser\ClassVariableType.h" />
-    <ClInclude Include="Src\Parser\IDDeclaration.h" />
     <ClInclude Include="Src\Parser\Identifier.h" />
     <ClInclude Include="Src\Parser\IDExpression.h" />
     <ClInclude Include="Src\Parser\IExpression.h" />
@@ -131,7 +130,7 @@ bison -d grammar.ypp</Command>
     <ClInclude Include="Src\Parser\IStatement.h" />
     <ClInclude Include="Src\Parser\MemberCall.h" />
     <ClInclude Include="Src\Parser\MemberValue.h" />
-    <ClInclude Include="Src\Parser\Parser.h" />
+    <ClInclude Include="Src\Parser\ParserTree.h" />
     <ClInclude Include="Src\Parser\Procedure.h" />
     <ClInclude Include="Src\Parser\ProcedureBody.h" />
     <ClInclude Include="Src\Parser\ProcedureHeader.h" />

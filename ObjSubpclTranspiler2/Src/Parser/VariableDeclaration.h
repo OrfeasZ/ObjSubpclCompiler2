@@ -8,8 +8,11 @@ namespace Parser
 		public IParserType
 	{
 	public:
+		virtual void Generate()
+		{
 
+		}
 	};
 
-	typedef std::vector<VariableDeclaration*> ParameterSeq;
+	typedef std::vector<VariableDeclaration*> VariableSeq;
 }

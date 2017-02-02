@@ -1,13 +1,16 @@
 #pragma once
 
-#include "IParserType.h"
+#include "IExpression.h"
 
 namespace Parser
 {
 	class ArrayExpression :
-		public IParserType
+		public IExpression
 	{
 	public:
+		virtual void Generate()
+		{
 
+		}
 	};
 }

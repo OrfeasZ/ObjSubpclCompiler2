@@ -1,13 +1,16 @@
 #pragma once
 
-#include "IParserType.h"
+#include "IStatement.h"
 
 namespace Parser
 {
 	class AssignmentStatement :
-		public IParserType
+		public IStatement
 	{
 	public:
+		virtual void Generate()
+		{
 
+		}
 	};
 }
