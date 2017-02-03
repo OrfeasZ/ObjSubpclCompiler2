@@ -35,6 +35,7 @@ namespace Parser
 		void GenerateVtable(ClassDefinition* p_Parent);
 		void GenerateConstructor(ClassDefinition* p_Parent);
 		void GenerateMethods(ClassDefinition* p_Parent);
+		void GenerateMethod(Procedure* p_Procedure);
 
 	public:
 		ClassHeader* m_Header;

@@ -42,13 +42,9 @@ void ClassDefinition::GenerateDefinitions()
 			throw new std::exception(("Could not find parent '" + m_Header->m_Extends->m_Name + "' for class '" + m_Header->m_Name->m_Name + "'.").c_str());
 	}
 
-	// Write our forward declaration;
-	Managers::CodeManager::Writer()->WriteLnInd("struct " + m_Header->m_Name->m_Name + "_t;");
-	Managers::CodeManager::Writer()->WriteLn();
-
 	// Generate code for this class.
-	GenerateVtable(s_Parent);
 	GenerateStruct(s_Parent);
+	GenerateVtable(s_Parent);
 }
 
 void ClassDefinition::GenerateBody()
@@ -145,6 +141,8 @@ void ClassDefinition::GenerateVtable(ClassDefinition* p_Parent)
 
 	// Generate method typedefs and forward declarations.
 	// TODO: Make sure we don't have any additional virtual functions or handle them appropriately.
+	Managers::CodeManager::Writer()->WriteLnInd("// Vtable method descriptors for class " + m_Header->m_Name->m_Name);
+
 	for (auto s_Method : s_Methods)
 	{
 		Managers::CodeManager::Writer()->WriteInd("typedef void (*" + m_Header->m_Name->m_Name + "__" + s_Method->m_Header->m_Name->m_Name + "_t)");
@@ -162,6 +160,7 @@ void ClassDefinition::GenerateVtable(ClassDefinition* p_Parent)
 	}
 	
 	// Write the vtable structure.
+	Managers::CodeManager::Writer()->WriteLnInd("// Vtable descriptor for class " + m_Header->m_Name->m_Name);
 	Managers::CodeManager::Writer()->WriteLnInd("struct " + m_Header->m_Name->m_Name + "_vtbl_t");
 	Managers::CodeManager::Writer()->WriteLnInd("{");
 	Managers::CodeManager::Writer()->AddIndent();
@@ -174,7 +173,8 @@ void ClassDefinition::GenerateVtable(ClassDefinition* p_Parent)
 	Managers::CodeManager::Writer()->WriteLn();
 
 	// Write the static vtable variable.
-	Managers::CodeManager::Writer()->WriteLnInd("static const struct " + m_Header->m_Name->m_Name + "_vtbl_t " + m_Header->m_Name->m_Name + "_vtblptr = ");
+	Managers::CodeManager::Writer()->WriteLnInd("// Static vtable for class " + m_Header->m_Name->m_Name);
+	Managers::CodeManager::Writer()->WriteLnInd("static struct " + m_Header->m_Name->m_Name + "_vtbl_t " + m_Header->m_Name->m_Name + "_vtblptr = ");
 	Managers::CodeManager::Writer()->WriteLnInd("{");
 	Managers::CodeManager::Writer()->AddIndent();
 
@@ -200,7 +200,7 @@ void ClassDefinition::GenerateStruct(ClassDefinition* p_Parent)
 	if (GetMethods(ProcedureType::Dynamic).size() > 0)
 	{
 		// TODO: Write only if our parent doesn't have a vtable himself.
-		Managers::CodeManager::Writer()->WriteLnInd("struct " + m_Header->m_Name->m_Name + "_vtbl_t* vtbl;");
+		Managers::CodeManager::Writer()->WriteLnInd("void* vtbl;");
 	}
 
 	// TODO: Make sure we don't have any additional virtual functions or handle them appropriately.
@@ -237,10 +237,53 @@ void ClassDefinition::GenerateStruct(ClassDefinition* p_Parent)
 
 void ClassDefinition::GenerateConstructor(ClassDefinition* p_Parent)
 {
+	auto s_Parameters = m_Body->m_Constructor->m_Header->GetParameters();
+	s_Parameters.insert(s_Parameters.begin(), "struct " + m_Header->m_Name->m_Name + "_t* th");
 
+	auto s_FinalParameters = Util::Utils::Join(s_Parameters, ", ");
+
+	Managers::CodeManager::Writer()->WriteLnInd("void " + m_Header->m_Name->m_Name + "__ctor(" + s_FinalParameters + ")");
+	Managers::CodeManager::Writer()->WriteLnInd("{");
+	Managers::CodeManager::Writer()->AddIndent();
+
+	// Clear our memory.
+	Managers::CodeManager::Writer()->WriteLnInd("memset(th, 0x00, sizeof(struct " + m_Header->m_Name->m_Name + "_t));");
+
+	// Init our vtable.
+	if (GetMethods(ProcedureType::Dynamic).size() > 0)
+		Managers::CodeManager::Writer()->WriteLnInd("th->vtbl = &" + m_Header->m_Name->m_Name + "_vtblptr;");
+
+	// TODO: Initialize class member variables.
+	// TODO: Generate constructor statements.
+
+	Managers::CodeManager::Writer()->RemoveIndent();
+	Managers::CodeManager::Writer()->WriteLnInd("}");
+	Managers::CodeManager::Writer()->WriteLn();
 }
 
 void ClassDefinition::GenerateMethods(ClassDefinition* p_Parent)
 {
+	for (auto s_Method : GetMethods(ProcedureType::Dynamic))
+		GenerateMethod(s_Method);
 
+	for (auto s_Method : GetMethods(ProcedureType::Standard))
+		GenerateMethod(s_Method);
+}
+
+void ClassDefinition::GenerateMethod(Procedure* p_Procedure)
+{
+	auto s_Parameters = p_Procedure->m_Header->GetParameters();
+	s_Parameters.insert(s_Parameters.begin(), "struct " + m_Header->m_Name->m_Name + "_t* th");
+
+	auto s_FinalParameters = Util::Utils::Join(s_Parameters, ", ");
+
+	Managers::CodeManager::Writer()->WriteLnInd("void " + m_Header->m_Name->m_Name + "__" + p_Procedure->m_Header->m_Name->m_Name + "(" + s_FinalParameters + ")");
+	Managers::CodeManager::Writer()->WriteLnInd("{");
+	Managers::CodeManager::Writer()->AddIndent();
+
+	// TODO: Generate method statements.
+
+	Managers::CodeManager::Writer()->RemoveIndent();
+	Managers::CodeManager::Writer()->WriteLnInd("}");
+	Managers::CodeManager::Writer()->WriteLn();
 }
