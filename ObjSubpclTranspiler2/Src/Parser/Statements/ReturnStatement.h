@@ -9,8 +9,5 @@ namespace Parser
 	{
 	public:
 		ReturnStatement();
-
-	public:
-		virtual void Generate() override;
 	};
 }

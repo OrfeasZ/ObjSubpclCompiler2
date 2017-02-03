@@ -11,8 +11,3 @@ ProcedureHeader::ProcedureHeader(Identifier* p_Name, VariableSeq* p_Parameters) 
 {
 
 }
-
-void ProcedureHeader::Generate()
-{
-
-}

@@ -10,8 +10,3 @@ ArrayExpression::ArrayExpression(IExpression* p_ArrayExpression, IExpression* p_
 {
 
 }
-
-void ArrayExpression::Generate()
-{
-
-}

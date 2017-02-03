@@ -24,7 +24,7 @@ program something;
 
 		abstract procedure huhwhat();
 
-		procedure whatever();
+		dynamic procedure whatever();
 		var test2 : integer;
 		begin
 			test2 := 1 + 5;

@@ -10,8 +10,3 @@ ClassBody::ClassBody(Procedure* p_Constructor, ProcedureSeq* p_Procedures) :
 {
 
 }
-
-void ClassBody::Generate()
-{
-
-}

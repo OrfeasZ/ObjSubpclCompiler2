@@ -11,7 +11,7 @@ ClassVariableType::ClassVariableType(Identifier* p_Type, ExpressionSeq* p_Argume
 {
 }
 
-void ClassVariableType::Generate()
+std::string ClassVariableType::ToString()
 {
-
+	return "struct " + m_Type->m_Name + "_t";
 }

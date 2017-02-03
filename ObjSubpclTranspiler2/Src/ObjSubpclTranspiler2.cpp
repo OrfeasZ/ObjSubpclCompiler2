@@ -1,5 +1,9 @@
 #include <Misc/StdAfx.h>
 
+#include <Parser/ParserTree.h>
+
+#include <Managers/CodeManager.h>
+
 extern int yyparse();
 extern int yylex();
 
@@ -9,7 +13,7 @@ extern FILE* yyin;
 int main(int argc, char* argv[])
 {
 #ifdef _DEBUG
-	yydebug = 1;
+	//yydebug = 1;
 
 	// TODO: Remove this.
 	argc = 2;
@@ -34,6 +38,21 @@ int main(int argc, char* argv[])
 	printf("Parsing file. Please wait.\n");
 
 	yyparse();
+	
+	printf("Finished parsing file.\n");
+
+	if (!Parser::ParserTree::GetProgram())
+	{
+		printf("Tree generation failed.\n");
+		return 1;
+	}
+
+	printf("Transpiling code...\n");
+
+	Parser::ParserTree::GetProgram()->Generate();
+
+	printf("\n");
+	printf(Managers::CodeManager::Writer()->GetBuffer().c_str());
 
 	// Close the file.
 	fclose(yyin);

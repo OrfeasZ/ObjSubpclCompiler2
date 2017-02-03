@@ -1,14 +1,11 @@
 #pragma once
 
-#include <Parser/IParserType.h>
+#include <Misc/StdAfx.h>
 
 namespace Parser
 {
-	class IExpression :
-		public IParserType
+	class IExpression
 	{
-	public:
-
 	};
 
 	typedef std::vector<IExpression*> ExpressionSeq;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Parser/IParserType.h>
+#include <Misc/StdAfx.h>
 
 namespace Parser
 {
@@ -17,15 +17,12 @@ namespace Parser
 		};
 	}
 
-	class Procedure :
-		public IParserType
+	class Procedure
 	{
 	public:
 		Procedure(ProcedureHeader* p_Header, ProcedureBody* p_Body = nullptr);
 
 	public:
-		virtual void Generate() override;
-
 		inline void SetType(ProcedureType::type p_Type)
 		{
 			m_Type = p_Type;

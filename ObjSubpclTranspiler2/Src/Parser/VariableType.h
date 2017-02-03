@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IParserType.h"
+#include <Misc/StdAfx.h>
 
 namespace Parser
 {
@@ -15,14 +15,13 @@ namespace Parser
 		};
 	}
 
-	class VariableType :
-		public IParserType
+	class VariableType
 	{
 	public:
 		VariableType(VariableTypes::type p_Type = VariableTypes::Integer);
 	
 	public:
-		virtual void Generate() override;
+		virtual std::string ToString();
 
 	public:
 		VariableTypes::type m_Type;

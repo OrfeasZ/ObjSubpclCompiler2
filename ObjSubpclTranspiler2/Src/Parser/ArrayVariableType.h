@@ -13,7 +13,7 @@ namespace Parser
 		ArrayVariableType(VariableType* p_InnerType, Integer* p_ElementCount);
 
 	public:
-		virtual void Generate() override;
+		virtual std::string ToString() override;
 
 	public:
 		VariableType* m_InnerType;

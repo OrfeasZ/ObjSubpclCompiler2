@@ -1,17 +1,13 @@
 #pragma once
 
-#include "IParserType.h"
+#include <Misc/StdAfx.h>
 
 namespace Parser
 {
-	class Identifier :
-		public IParserType
+	class Identifier
 	{
 	public:
 		Identifier(const std::string& p_Name);
-
-	public:
-		virtual void Generate() override;
 
 	public:
 		std::string m_Name;

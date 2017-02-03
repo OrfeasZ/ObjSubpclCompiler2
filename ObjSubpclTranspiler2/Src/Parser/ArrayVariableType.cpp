@@ -12,7 +12,8 @@ ArrayVariableType::ArrayVariableType(VariableType* p_InnerType, Integer* p_Eleme
 
 }
 
-void ArrayVariableType::Generate()
+std::string ArrayVariableType::ToString()
 {
-
+	// NOTE: Element count handling is performed elsewhere.
+	return m_InnerType->ToString();
 }

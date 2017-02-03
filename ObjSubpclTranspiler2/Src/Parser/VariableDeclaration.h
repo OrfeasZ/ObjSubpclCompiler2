@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IParserType.h"
+#include <Misc/StdAfx.h>
 
 namespace Parser
 {
@@ -9,14 +9,10 @@ namespace Parser
 	
 	class VariableType;
 
-	class VariableDeclaration :
-		public IParserType
+	class VariableDeclaration
 	{
 	public:
 		VariableDeclaration(IDSeq* p_IDs, VariableType* p_Type);
-
-	public:
-		virtual void Generate() override;
 
 	public:
 		IDSeq* m_IDs;

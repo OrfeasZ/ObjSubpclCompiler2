@@ -1,19 +1,15 @@
 #pragma once
 
-#include <Parser/IParserType.h>
+#include <Misc/StdAfx.h>
 
 namespace Parser
 {
 	class Identifier;
 
-	class ClassHeader :
-		public IParserType
+	class ClassHeader
 	{
 	public:
 		ClassHeader(Identifier* p_Name, Identifier* p_Extends = nullptr);
-
-	public:
-		virtual void Generate() override;
 		
 	public:
 		Identifier* m_Name;

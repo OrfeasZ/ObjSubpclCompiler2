@@ -9,8 +9,3 @@ MemberCall::MemberCall(IExpression* p_VariableExpression, Identifier* p_Name, Ex
 	m_VariableExpression(p_VariableExpression)
 {
 }
-
-void MemberCall::Generate()
-{
-
-}

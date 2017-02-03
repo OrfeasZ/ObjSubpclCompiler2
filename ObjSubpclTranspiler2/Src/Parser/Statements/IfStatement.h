@@ -13,9 +13,6 @@ namespace Parser
 		IfStatement(IExpression* p_IfExpression, IStatement* p_ThenStatement, IStatement* p_ElseStatement = nullptr);
 
 	public:
-		virtual void Generate() override;
-
-	public:
 		IExpression* m_IfExpression;
 		IStatement* m_ThenStatement;
 		IStatement* m_ElseStatement;

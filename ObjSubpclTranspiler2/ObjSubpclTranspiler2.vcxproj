@@ -159,7 +159,6 @@ bison -d grammar.ypp</Command>
     <ClInclude Include="Src\Parser\Expressions\IExpression.h" />
     <ClInclude Include="Src\Parser\Statements\IfStatement.h" />
     <ClInclude Include="Src\Parser\Expressions\Integer.h" />
-    <ClInclude Include="Src\Parser\IParserType.h" />
     <ClInclude Include="Src\Parser\Statements\IStatement.h" />
     <ClInclude Include="Src\Parser\Expressions\MemberCall.h" />
     <ClInclude Include="Src\Parser\Expressions\MemberValue.h" />

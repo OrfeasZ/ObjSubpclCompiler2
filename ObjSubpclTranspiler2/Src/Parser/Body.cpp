@@ -15,8 +15,3 @@ Body::Body(StatementSeq* p_Body, VariableSeq* p_Variables, ProcedureSeq* p_Proce
 {
 
 }
-
-void Body::Generate()
-{
-
-}

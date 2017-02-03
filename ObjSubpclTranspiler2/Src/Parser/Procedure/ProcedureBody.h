@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Parser/IParserType.h>
+#include <Misc/StdAfx.h>
 
 namespace Parser
 {
@@ -9,14 +9,10 @@ namespace Parser
 	class VariableDeclaration;
 	typedef std::vector<VariableDeclaration*> VariableSeq;
 
-	class ProcedureBody :
-		public IParserType
+	class ProcedureBody
 	{
 	public:
 		ProcedureBody(StatementSeq* p_Body, VariableSeq* p_Variables = nullptr);
-
-	public:
-		virtual void Generate() override;
 
 	public:
 		StatementSeq* m_Body;

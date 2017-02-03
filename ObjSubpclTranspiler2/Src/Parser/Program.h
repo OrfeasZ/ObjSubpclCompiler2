@@ -1,7 +1,5 @@
 #pragma once
 
-#include "IParserType.h"
-
 #include "Identifier.h"
 #include "Body.h"
 
@@ -10,14 +8,19 @@ namespace Parser
 	class Identifier;
 	class Body;
 
-	class Program :
-		public IParserType
+	class Program
 	{
 	public:
 		Program(Identifier* p_ID, Body* p_Body);
 
 	public:
-		virtual void Generate() override;
+		void Generate();
+
+	private:
+		void GenerateStaticVariables();
+		void GenerateMethods();
+		void GenerateClasses();
+		void GenerateMain();
 
 	public:
 		Identifier* m_ID;

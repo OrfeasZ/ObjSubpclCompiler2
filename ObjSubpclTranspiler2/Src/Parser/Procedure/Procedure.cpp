@@ -12,8 +12,3 @@ Procedure::Procedure(ProcedureHeader* p_Header, ProcedureBody* p_Body) :
 {
 
 }
-
-void Procedure::Generate()
-{
-
-}

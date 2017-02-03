@@ -8,7 +8,17 @@ VariableType::VariableType(VariableTypes::type p_Type) :
 
 }
 
-void VariableType::Generate()
+std::string VariableType::ToString()
 {
+	switch (m_Type)
+	{
+	case VariableTypes::Integer:
+		return "long";
 
+	case VariableTypes::Real:
+		return "double";
+
+	default:
+		return "";
+	}
 }

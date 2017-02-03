@@ -11,8 +11,3 @@ IfStatement::IfStatement(IExpression* p_IfExpression, IStatement* p_ThenStatemen
 {
 
 }
-
-void IfStatement::Generate()
-{
-
-}

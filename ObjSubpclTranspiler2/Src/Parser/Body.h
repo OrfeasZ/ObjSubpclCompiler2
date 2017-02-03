@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IParserType.h"
+#include <Misc/StdAfx.h>
 
 namespace Parser
 {
@@ -15,14 +15,10 @@ namespace Parser
 	class ClassDefinition;
 	typedef std::vector<ClassDefinition*> ClassSeq;
 
-	class Body :
-		public IParserType
+	class Body
 	{
 	public:
 		Body(StatementSeq* p_Body, VariableSeq* p_Variables = nullptr, ProcedureSeq* p_Procedures = nullptr, ClassSeq* p_Classes = nullptr);
-
-	public:
-		virtual void Generate() override;
 
 	public:
 		StatementSeq* m_Body;

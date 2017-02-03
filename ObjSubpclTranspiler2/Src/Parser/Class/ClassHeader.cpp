@@ -10,8 +10,3 @@ ClassHeader::ClassHeader(Identifier* p_Name, Identifier* p_Extends) :
 {
 
 }
-
-void ClassHeader::Generate()
-{
-
-}

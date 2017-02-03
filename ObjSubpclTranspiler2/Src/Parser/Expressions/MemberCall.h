@@ -13,9 +13,6 @@ namespace Parser
 		MemberCall(IExpression* p_VariableExpression, Identifier* p_Name, ExpressionSeq* p_Arguments = nullptr);
 
 	public:
-		virtual void Generate() override;
-
-	public:
 		IExpression* m_VariableExpression;
 	};
 }

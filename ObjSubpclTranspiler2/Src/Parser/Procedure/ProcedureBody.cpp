@@ -11,8 +11,3 @@ ProcedureBody::ProcedureBody(StatementSeq* p_Body, VariableSeq* p_Variables) :
 {
 
 }
-
-void ProcedureBody::Generate()
-{
-
-}

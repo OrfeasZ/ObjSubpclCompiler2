@@ -1,24 +1,39 @@
 #pragma once
 
-#include <Parser/IParserType.h>
+#include <Misc/StdAfx.h>
+
+#include <Parser/Procedure/Procedure.h>
 
 namespace Parser
 {
+	class Procedure;
 	class ClassHeader;
+	class VariableType;
 
 	class VariableDeclaration;
 	typedef std::vector<VariableDeclaration*> VariableSeq;
 
 	class ClassBody;
 
-	class ClassDefinition :
-		public IParserType
+	class ClassDefinition
 	{
 	public:
 		ClassDefinition(ClassHeader* p_Header, VariableSeq* p_Variables, ClassBody* p_Body);
-
+		
 	public:
-		virtual void Generate() override;
+		void Generate();
+
+		std::vector<Procedure*> GetMethods(ProcedureType::type p_Type = ProcedureType::Standard);
+
+		bool IsAbstract();
+		bool HasMember(const std::string& p_Name);
+		bool HasMethod(const std::string& p_Name);
+
+	private:
+		void GenerateStruct(ClassDefinition* p_Parent);
+		void GenerateVtable(ClassDefinition* p_Parent);
+		void GenerateConstructor(ClassDefinition* p_Parent);
+		void GenerateMethods(ClassDefinition* p_Parent);
 
 	public:
 		ClassHeader* m_Header;

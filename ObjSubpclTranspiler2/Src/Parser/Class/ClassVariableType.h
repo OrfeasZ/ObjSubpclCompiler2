@@ -16,7 +16,7 @@ namespace Parser
 		ClassVariableType(Identifier* p_Type, ExpressionSeq* p_Arguments = nullptr);
 
 	public:
-		virtual void Generate() override;
+		virtual std::string ToString() override;
 
 	public:
 		Identifier* m_Type;

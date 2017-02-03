@@ -8,8 +8,3 @@ BinaryExpression::BinaryExpression(IExpression* p_Left, IExpression* p_Right, Bi
 	m_Type(p_Type)
 {
 }
-
-void BinaryExpression::Generate()
-{
-
-}

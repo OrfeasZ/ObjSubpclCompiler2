@@ -31,7 +31,6 @@
 #include "ArrayVariableType.h"
 #include "Body.h"
 #include "Identifier.h"
-#include "IParserType.h"
 #include "Program.h"
 #include "VariableDeclaration.h"
 #include "VariableType.h"

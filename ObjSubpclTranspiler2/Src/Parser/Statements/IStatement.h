@@ -1,23 +1,18 @@
 #pragma once
 
-#include <Parser/IParserType.h>
+#include <Misc/StdAfx.h>
 
 #include <vector>
 
 namespace Parser
 {
-	class IStatement :
-		public IParserType
+	class IStatement
 	{
-	public:
-
 	};
 
 	class StatementSeq :
 		public IStatement,
 		public std::vector<IStatement*>
 	{
-	public:
-		virtual void Generate() override {}
 	};
 }

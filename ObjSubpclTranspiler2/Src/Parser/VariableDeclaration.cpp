@@ -11,8 +11,3 @@ VariableDeclaration::VariableDeclaration(IDSeq* p_IDs, VariableType* p_Type) :
 {
 
 }
-
-void VariableDeclaration::Generate()
-{
-
-}

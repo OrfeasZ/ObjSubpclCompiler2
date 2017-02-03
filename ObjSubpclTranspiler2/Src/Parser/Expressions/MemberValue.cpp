@@ -9,8 +9,3 @@ MemberValue::MemberValue(IExpression* p_VariableExpression, Identifier* p_Member
 	m_Member(p_Member)
 {
 }
-
-void MemberValue::Generate()
-{
-
-}

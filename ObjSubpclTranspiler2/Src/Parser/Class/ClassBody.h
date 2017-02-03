@@ -1,21 +1,17 @@
 #pragma once
 
-#include <Parser/IParserType.h>
+#include <Misc/StdAfx.h>
 
 namespace Parser
 {
 	class Procedure;
 	typedef std::vector<Procedure*> ProcedureSeq;
 
-	class ClassBody :
-		public IParserType
+	class ClassBody
 	{
 	public:
 		ClassBody(Procedure* p_Constructor, ProcedureSeq* p_Procedures = nullptr);
-
-	public:
-		virtual void Generate() override;
-
+		
 	public:
 		Procedure* m_Constructor;
 		ProcedureSeq* m_Procedures;
