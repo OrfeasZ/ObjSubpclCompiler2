@@ -60,6 +60,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>YY_NO_UNISTD_H;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;WIN32;YYDEBUG;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)Src;$(SolutionDir)Depends\include</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -83,6 +84,7 @@ bison -d grammar.ypp</Command>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>YY_NO_UNISTD_H;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)Src;$(SolutionDir)Depends\include</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -101,6 +103,8 @@ bison -d grammar.ypp</Command>
   <ItemGroup>
     <ClCompile Include="Src\Grammar\grammar.tab.cpp" />
     <ClCompile Include="Src\Grammar\lex.yy.cpp" />
+    <ClCompile Include="Src\Managers\ClassManager.cpp" />
+    <ClCompile Include="Src\Managers\CodeManager.cpp" />
     <ClCompile Include="Src\ObjSubpclTranspiler2.cpp" />
     <ClCompile Include="Src\Parser\Expressions\ArrayExpression.cpp" />
     <ClCompile Include="Src\Parser\ArrayVariableType.cpp" />
@@ -129,6 +133,7 @@ bison -d grammar.ypp</Command>
     <ClCompile Include="Src\Parser\VariableDeclaration.cpp" />
     <ClCompile Include="Src\Parser\VariableType.cpp" />
     <ClCompile Include="Src\Parser\Statements\WhileStatement.cpp" />
+    <ClCompile Include="Src\Utils\CodeWriter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Grammar\grammar.lex" />
@@ -136,6 +141,8 @@ bison -d grammar.ypp</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Grammar\grammar.tab.hpp" />
+    <ClInclude Include="Src\Managers\ClassManager.h" />
+    <ClInclude Include="Src\Managers\CodeManager.h" />
     <ClInclude Include="Src\Misc\StdAfx.h" />
     <ClInclude Include="Src\Parser\Expressions\ArrayExpression.h" />
     <ClInclude Include="Src\Parser\ArrayVariableType.h" />
@@ -167,6 +174,7 @@ bison -d grammar.ypp</Command>
     <ClInclude Include="Src\Parser\VariableDeclaration.h" />
     <ClInclude Include="Src\Parser\VariableType.h" />
     <ClInclude Include="Src\Parser\Statements\WhileStatement.h" />
+    <ClInclude Include="Src\Utils\CodeWriter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
