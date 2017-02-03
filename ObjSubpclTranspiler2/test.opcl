@@ -31,6 +31,11 @@ program something;
 			a := b / d;
 			A(asd);
 		end;
+
+		dynamic procedure whatever2(a, b : integer; d : Test());
+		begin
+
+		end;
 	end;
 
 	class Test2 extends Test

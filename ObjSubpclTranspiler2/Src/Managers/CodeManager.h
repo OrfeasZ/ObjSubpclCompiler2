@@ -1,16 +1,16 @@
 #pragma once
 
 #include <Misc/StdAfx.h>
-#include <Utils/CodeWriter.h>
+#include <Util/CodeWriter.h>
 
 namespace Managers
 {
 	class CodeManager
 	{
 	public:
-		static Utils::CodeWriter* Writer();
+		static Util::CodeWriter* Writer();
 
 	private:
-		static Utils::CodeWriter* m_Writer;
+		static Util::CodeWriter* m_Writer;
 	};
 }

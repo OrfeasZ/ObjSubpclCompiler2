@@ -2,6 +2,8 @@
 
 #include <Misc/StdAfx.h>
 
+#include <vector>
+
 namespace Parser
 {
 	class Identifier;
@@ -13,6 +15,9 @@ namespace Parser
 	{
 	public:
 		ProcedureHeader(Identifier* p_Name, VariableSeq* p_Parameters = nullptr);
+
+	public:
+		std::vector<std::string> GetParameters();
 
 	public:
 		Identifier* m_Name;

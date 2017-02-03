@@ -13,13 +13,13 @@ namespace Parser
 		public VariableType
 	{
 	public:
-		ClassVariableType(Identifier* p_Type, ExpressionSeq* p_Arguments = nullptr);
+		ClassVariableType(Identifier* p_ClassType, ExpressionSeq* p_Arguments = nullptr);
 
 	public:
 		virtual std::string ToString() override;
 
 	public:
-		Identifier* m_Type;
+		Identifier* m_ClassType;
 		ExpressionSeq* m_Arguments;
 	};
 }

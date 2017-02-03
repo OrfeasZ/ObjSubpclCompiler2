@@ -4,6 +4,8 @@
 
 #include <Managers/CodeManager.h>
 
+#include <fstream>
+
 extern int yyparse();
 extern int yylex();
 
@@ -53,6 +55,12 @@ int main(int argc, char* argv[])
 
 	printf("\n");
 	printf(Managers::CodeManager::Writer()->GetBuffer().c_str());
+
+
+	std::ofstream s_SourceFile("B:\\test.c", std::ofstream::out);
+	s_SourceFile << Managers::CodeManager::Writer()->GetBuffer();
+	s_SourceFile.flush();
+	s_SourceFile.close();
 
 	// Close the file.
 	fclose(yyin);

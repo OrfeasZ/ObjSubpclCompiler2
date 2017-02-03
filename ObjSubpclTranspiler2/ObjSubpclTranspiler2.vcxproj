@@ -133,7 +133,8 @@ bison -d grammar.ypp</Command>
     <ClCompile Include="Src\Parser\VariableDeclaration.cpp" />
     <ClCompile Include="Src\Parser\VariableType.cpp" />
     <ClCompile Include="Src\Parser\Statements\WhileStatement.cpp" />
-    <ClCompile Include="Src\Utils\CodeWriter.cpp" />
+    <ClCompile Include="Src\Util\CodeWriter.cpp" />
+    <ClCompile Include="Src\Util\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Grammar\grammar.lex" />
@@ -173,7 +174,8 @@ bison -d grammar.ypp</Command>
     <ClInclude Include="Src\Parser\VariableDeclaration.h" />
     <ClInclude Include="Src\Parser\VariableType.h" />
     <ClInclude Include="Src\Parser\Statements\WhileStatement.h" />
-    <ClInclude Include="Src\Utils\CodeWriter.h" />
+    <ClInclude Include="Src\Util\CodeWriter.h" />
+    <ClInclude Include="Src\Util\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

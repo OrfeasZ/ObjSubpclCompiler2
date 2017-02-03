@@ -3,15 +3,22 @@
 #include <Parser/Identifier.h>
 #include <Parser/Expressions/IExpression.h>
 
+#include <Managers/ClassManager.h>
+
 using namespace Parser;
 
-ClassVariableType::ClassVariableType(Identifier* p_Type, ExpressionSeq* p_Arguments) :
-	m_Type(p_Type),
+ClassVariableType::ClassVariableType(Identifier* p_ClassType, ExpressionSeq* p_Arguments) :
+	VariableType(VariableTypes::Class),
+	m_ClassType(p_ClassType),
 	m_Arguments(p_Arguments)
 {
 }
 
 std::string ClassVariableType::ToString()
 {
-	return "struct " + m_Type->m_Name + "_t";
+	// Check to see if the class we're referencing exists.
+	if (Managers::ClassManager::GetClass(m_ClassType->m_Name) == nullptr)
+		throw new std::exception(("Could not find class '" + m_ClassType->m_Name + "' used for a variable.").c_str());
+
+	return "struct " + m_ClassType->m_Name + "_t";
 }

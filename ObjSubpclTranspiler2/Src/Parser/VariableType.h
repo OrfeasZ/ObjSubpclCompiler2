@@ -18,7 +18,7 @@ namespace Parser
 	class VariableType
 	{
 	public:
-		VariableType(VariableTypes::type p_Type = VariableTypes::Integer);
+		VariableType(VariableTypes::type p_Type);
 	
 	public:
 		virtual std::string ToString();

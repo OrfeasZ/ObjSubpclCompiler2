@@ -17,9 +17,10 @@ namespace Parser
 		void Generate();
 
 	private:
+		void GenerateClassDefinitions();
 		void GenerateStaticVariables();
 		void GenerateMethods();
-		void GenerateClasses();
+		void GenerateClassBodies();
 		void GenerateMain();
 
 	public:

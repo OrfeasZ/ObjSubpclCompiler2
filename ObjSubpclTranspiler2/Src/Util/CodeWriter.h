@@ -25,7 +25,7 @@
 
 #include <sstream>
 
-namespace Utils
+namespace Util
 {
 	class CodeWriter
 	{

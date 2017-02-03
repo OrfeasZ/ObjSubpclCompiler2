@@ -2,12 +2,12 @@
 
 using namespace Managers;
 
-Utils::CodeWriter* CodeManager::m_Writer = nullptr;
+Util::CodeWriter* CodeManager::m_Writer = nullptr;
 
-Utils::CodeWriter* CodeManager::Writer()
+Util::CodeWriter* CodeManager::Writer()
 {
 	if (!m_Writer)
-		m_Writer = new Utils::CodeWriter();
+		m_Writer = new Util::CodeWriter();
 
 	return m_Writer;
 }

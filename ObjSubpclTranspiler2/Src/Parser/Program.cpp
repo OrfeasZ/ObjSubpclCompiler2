@@ -22,10 +22,20 @@ Program::Program(Identifier* p_ID, Body* p_Body) :
 
 void Program::Generate()
 {
+	GenerateClassDefinitions();
 	GenerateStaticVariables();
 	GenerateMethods();
-	GenerateClasses();
+	GenerateClassBodies();
 	GenerateMain();
+}
+
+void Program::GenerateClassDefinitions()
+{
+	if (!m_Body->m_Classes)
+		return;
+
+	for (auto s_Class : *m_Body->m_Classes)
+		s_Class->GenerateDefinitions();
 }
 
 void Program::GenerateStaticVariables()
@@ -51,21 +61,26 @@ void Program::GenerateStaticVariables()
 			Managers::CodeManager::Writer()->WriteLn(";");
 		}
 	}
+
+	Managers::CodeManager::Writer()->WriteLn();
 }
 
 void Program::GenerateMethods()
 {
 	if (!m_Body->m_Procedures)
 		return;
+
+	// TODO: Write methods.
+	Managers::CodeManager::Writer()->WriteLn();
 }
 
-void Program::GenerateClasses()
+void Program::GenerateClassBodies()
 {
 	if (!m_Body->m_Classes)
 		return;
 
 	for (auto s_Class : *m_Body->m_Classes)
-		s_Class->Generate();
+		s_Class->GenerateBody();
 }
 
 void Program::GenerateMain()
@@ -76,4 +91,5 @@ void Program::GenerateMain()
 	// TODO: Write main body statements.
 
 	Managers::CodeManager::Writer()->WriteLnInd("}");
+	Managers::CodeManager::Writer()->WriteLn();
 }

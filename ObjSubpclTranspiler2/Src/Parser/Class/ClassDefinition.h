@@ -21,7 +21,8 @@ namespace Parser
 		ClassDefinition(ClassHeader* p_Header, VariableSeq* p_Variables, ClassBody* p_Body);
 		
 	public:
-		void Generate();
+		void GenerateDefinitions();
+		void GenerateBody();
 
 		std::vector<Procedure*> GetMethods(ProcedureType::type p_Type = ProcedureType::Standard);
 

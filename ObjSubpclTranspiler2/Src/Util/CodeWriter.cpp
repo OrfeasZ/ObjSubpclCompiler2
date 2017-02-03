@@ -21,7 +21,7 @@
 
 #include "CodeWriter.h"
 
-using namespace Utils;
+using namespace Util;
 
 CodeWriter::CodeWriter() :
 	m_IndentLevel(0)
