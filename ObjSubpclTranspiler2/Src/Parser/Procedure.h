@@ -4,6 +4,9 @@
 
 namespace Parser
 {
+	class ProcedureHeader;
+	class ProcedureBody;
+
 	namespace ProcedureType
 	{
 		enum type
@@ -18,23 +21,14 @@ namespace Parser
 		public IParserType
 	{
 	public:
-		Procedure(ProcedureHeader* p_Header, ProcedureBody* p_Body) :
-			m_Header(p_Header),
-			m_Body(p_Body),
-			m_Type(ProcedureType::Standard)
-		{
-
-		}
+		Procedure(ProcedureHeader* p_Header, ProcedureBody* p_Body = nullptr);
 
 	public:
-		void SetType(ProcedureType::type p_Type)
+		virtual void Generate() override;
+
+		inline void SetType(ProcedureType::type p_Type)
 		{
 			m_Type = p_Type;
-		}
-
-		virtual void Generate()
-		{
-
 		}
 
 	public:

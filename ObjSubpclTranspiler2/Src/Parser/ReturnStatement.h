@@ -8,9 +8,9 @@ namespace Parser
 		public IStatement
 	{
 	public:
-		virtual void Generate()
-		{
+		ReturnStatement();
 
-		}
+	public:
+		virtual void Generate() override;
 	};
 }

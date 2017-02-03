@@ -102,6 +102,33 @@ bison -d grammar.ypp</Command>
     <ClCompile Include="Src\Grammar\grammar.tab.cpp" />
     <ClCompile Include="Src\Grammar\lex.yy.cpp" />
     <ClCompile Include="Src\ObjSubpclTranspiler2.cpp" />
+    <ClCompile Include="Src\Parser\ArrayExpression.cpp" />
+    <ClCompile Include="Src\Parser\ArrayVariableType.cpp" />
+    <ClCompile Include="Src\Parser\AssignmentStatement.cpp" />
+    <ClCompile Include="Src\Parser\BinaryExpression.cpp" />
+    <ClCompile Include="Src\Parser\Body.cpp" />
+    <ClCompile Include="Src\Parser\Call.cpp" />
+    <ClCompile Include="Src\Parser\ClassBody.cpp" />
+    <ClCompile Include="Src\Parser\ClassDefinition.cpp" />
+    <ClCompile Include="Src\Parser\ClassHeader.cpp" />
+    <ClCompile Include="Src\Parser\ClassVariableType.cpp" />
+    <ClCompile Include="Src\Parser\Identifier.cpp" />
+    <ClCompile Include="Src\Parser\IDExpression.cpp" />
+    <ClCompile Include="Src\Parser\IfStatement.cpp" />
+    <ClCompile Include="Src\Parser\Integer.cpp" />
+    <ClCompile Include="Src\Parser\MemberCall.cpp" />
+    <ClCompile Include="Src\Parser\MemberValue.cpp" />
+    <ClCompile Include="Src\Parser\ParserTree.cpp" />
+    <ClCompile Include="Src\Parser\Procedure.cpp" />
+    <ClCompile Include="Src\Parser\ProcedureBody.cpp" />
+    <ClCompile Include="Src\Parser\ProcedureHeader.cpp" />
+    <ClCompile Include="Src\Parser\Program.cpp" />
+    <ClCompile Include="Src\Parser\Real.cpp" />
+    <ClCompile Include="Src\Parser\ReturnStatement.cpp" />
+    <ClCompile Include="Src\Parser\UnaryExpression.cpp" />
+    <ClCompile Include="Src\Parser\VariableDeclaration.cpp" />
+    <ClCompile Include="Src\Parser\VariableType.cpp" />
+    <ClCompile Include="Src\Parser\WhileStatement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Grammar\grammar.lex" />

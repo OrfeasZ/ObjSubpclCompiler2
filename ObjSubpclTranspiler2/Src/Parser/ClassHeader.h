@@ -4,22 +4,16 @@
 
 namespace Parser
 {
+	class Identifier;
+
 	class ClassHeader :
 		public IParserType
 	{
 	public:
-		ClassHeader(Identifier* p_Name, Identifier* p_Extends = nullptr) :
-			m_Name,
-			m_Extends
-		{
-
-		}
+		ClassHeader(Identifier* p_Name, Identifier* p_Extends = nullptr);
 
 	public:
-		virtual void Generate()
-		{
-
-		}
+		virtual void Generate() override;
 		
 	public:
 		Identifier* m_Name;

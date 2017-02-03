@@ -8,16 +8,11 @@ namespace Parser
 		public IParserType
 	{
 	public:
-		Identifier(const std::string& p_Name) :
-			m_Name(p_Name)
-		{
-		}
+		Identifier(const std::string& p_Name);
 
 	public:
-		virtual void Generate()
-		{
+		virtual void Generate() override;
 
-		}
 	public:
 		std::string m_Name;
 	};

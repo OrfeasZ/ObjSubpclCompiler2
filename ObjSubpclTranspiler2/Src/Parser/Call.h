@@ -5,23 +5,17 @@
 
 namespace Parser
 {
+	class Identifier;
+
 	class Call :
 		public IExpression,
 		public IStatement
 	{
 	public:
-		Call(Identifier* p_Name, ExpressionSeq* p_Arguments) :
-			m_Name(p_Name),
-			m_Arguments(p_Arguments)
-		{
-
-		}
+		Call(Identifier* p_Name, ExpressionSeq* p_Arguments = nullptr);
 
 	public:
-		virtual void Generate()
-		{
-
-		}
+		virtual void Generate() override;
 
 	public:
 		Identifier* m_Name;

@@ -4,23 +4,16 @@
 
 namespace Parser
 {
+	class Integer;
+
 	class ArrayVariableType :
 		public VariableType
 	{
 	public:
-		ArrayVariableType(VariableType* p_InnerType, Integer* p_ElementCount) :
-			VariableType(VariableTypes::Array),
-			m_InnerType(p_InnerType),
-			m_ElementCount(p_ElementCount)
-		{
-
-		}
+		ArrayVariableType(VariableType* p_InnerType, Integer* p_ElementCount);
 
 	public:
-		virtual void Generate()
-		{
-
-		}
+		virtual void Generate() override;
 
 	public:
 		VariableType* m_InnerType;

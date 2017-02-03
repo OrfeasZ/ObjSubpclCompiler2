@@ -4,22 +4,16 @@
 
 namespace Parser
 {
+	class IExpression;
+
 	class WhileStatement:
 		public IStatement
 	{
 	public:
-		WhileStatement(IExpression* p_WhileExpression, IStatement* p_DoStatement) :
-			m_WhileExpression(p_WhileExpression),
-			m_DoStatement(p_DoStatement)
-		{
-
-		}
+		WhileStatement(IExpression* p_WhileExpression, IStatement* p_DoStatement);
 
 	public:
-		virtual void Generate()
-		{
-
-		}
+		virtual void Generate() override;
 
 	public:
 		IExpression* m_WhileExpression;

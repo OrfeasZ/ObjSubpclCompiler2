@@ -38,6 +38,18 @@ namespace Parser
 {
 	class ParserTree
 	{
+	public:
+		static void SetProgram(Program* p_Program)
+		{
+			m_Program = p_Program;
+		}
 
+		static Program* GetProgram()
+		{
+			return m_Program;
+		}
+
+	protected:
+		static Program* m_Program;
 	};
 }

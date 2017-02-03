@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IParserType.h"
+#include "IExpression.h"
 
 #include <sstream>
 
@@ -10,14 +10,10 @@ namespace Parser
 		public IExpression
 	{
 	public:
-		Integer(const std::string& p_Value)
-		{
-			std::stringstream s_Stream(p_Value);
-			s_Stream >> m_Value;
-		}
+		Integer(const std::string& p_Value);
 
 	public:
-		virtual void Generate() {}
+		virtual void Generate() override;
 
 	public:
 		int64_t m_Value;

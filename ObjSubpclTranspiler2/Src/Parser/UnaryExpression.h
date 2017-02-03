@@ -18,9 +18,13 @@ namespace Parser
 		public IExpression
 	{
 	public:
-		virtual void Generate()
-		{
+		UnaryExpression(IExpression* p_Expression, UnaryExpressions::type p_Type);
 
-		}
+	public:
+		virtual void Generate() override;
+
+	public:
+		IExpression* m_Expression;
+		UnaryExpressions::type m_Type;
 	};
 }

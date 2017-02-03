@@ -7,21 +7,17 @@
 
 namespace Parser
 {
+	class Identifier;
+	class Body;
+
 	class Program :
 		public IParserType
 	{
 	public:
-		Program(Identifier* p_ID, Body* p_Body) :
-			m_ID(p_ID),
-			m_Body(p_Body)
-		{
-		}
+		Program(Identifier* p_ID, Body* p_Body);
 
 	public:
-		virtual void Generate()
-		{
-
-		}
+		virtual void Generate() override;
 
 	public:
 		Identifier* m_ID;

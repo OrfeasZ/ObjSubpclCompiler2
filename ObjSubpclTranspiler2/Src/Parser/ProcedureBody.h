@@ -4,22 +4,19 @@
 
 namespace Parser
 {
+	class StatementSeq;
+
+	class VariableDeclaration;
+	typedef std::vector<VariableDeclaration*> VariableSeq;
+
 	class ProcedureBody :
 		public IParserType
 	{
 	public:
-		ProcedureBody(StatementSeq* p_Body, VariableSeq* p_Variables) :
-			m_Body(p_Body),
-			m_Variables(p_Variables)
-		{
-
-		}
+		ProcedureBody(StatementSeq* p_Body, VariableSeq* p_Variables = nullptr);
 
 	public:
-		virtual void Generate()
-		{
-
-		}
+		virtual void Generate() override;
 
 	public:
 		StatementSeq* m_Body;

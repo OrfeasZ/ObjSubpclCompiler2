@@ -19,17 +19,10 @@ namespace Parser
 		public IParserType
 	{
 	public:
-		VariableType(VariableTypes::type p_Type = VariableTypes::Integer) :
-			m_Type(p_Type)
-		{
-
-		}
+		VariableType(VariableTypes::type p_Type = VariableTypes::Integer);
 	
 	public:
-		virtual void Generate()
-		{
-
-		}
+		virtual void Generate() override;
 
 	public:
 		VariableTypes::type m_Type;

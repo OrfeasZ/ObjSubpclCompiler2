@@ -4,23 +4,21 @@
 
 namespace Parser
 {
+	class ClassHeader;
+
+	class VariableDeclaration;
+	typedef std::vector<VariableDeclaration*> VariableSeq;
+
+	class ClassBody;
+
 	class ClassDefinition :
 		public IParserType
 	{
 	public:
-		ClassDefinition(ClassHeader* p_Header, VariableSeq* p_Variables, ClassBody* p_Body) :
-			m_Header(p_Header),
-			m_Variables(p_Variables),
-			m_Body(p_Body)
-		{
-
-		}
+		ClassDefinition(ClassHeader* p_Header, VariableSeq* p_Variables, ClassBody* p_Body);
 
 	public:
-		virtual void Generate()
-		{
-
-		}
+		virtual void Generate() override;
 
 	public:
 		ClassHeader* m_Header;

@@ -2,6 +2,8 @@
 
 #include "IParserType.h"
 
+#include <vector>
+
 namespace Parser
 {
 	class IStatement :
@@ -12,8 +14,10 @@ namespace Parser
 	};
 
 	class StatementSeq :
-		public std::vector<IStatement*>,
-		public IStatement
+		public IStatement,
+		public std::vector<IStatement*>
 	{
+	public:
+		virtual void Generate() override {}
 	};
 }

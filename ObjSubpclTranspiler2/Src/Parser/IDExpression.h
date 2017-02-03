@@ -1,24 +1,19 @@
 #pragma once
 
-#include "IParserType.h"
+#include "IExpression.h"
 
 namespace Parser
 {
+	class Identifier;
+
 	class IDExpression :
-		public IParserType
+		public IExpression
 	{
 	public:
-		IDExpression(Identifier* p_ID) :
-			m_ID(p_ID)
-		{
-
-		}
+		IDExpression(Identifier* p_ID);
 
 	public:
-		virtual void Generate()
-		{
-
-		}
+		virtual void Generate() override;
 
 	public:
 		Identifier* m_ID;

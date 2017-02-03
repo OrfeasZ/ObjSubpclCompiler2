@@ -45,7 +45,7 @@
 
 	::Parser::ProcedureSeq* class_procedure_seq;
 	::Parser::Procedure* class_procedure;
-	::Parser::AbstractProcedure* abstract_procedure;
+	::Parser::Procedure* abstract_procedure;
 	::Parser::Procedure* dynamic_procedure;
 	::Parser::ClassSeq* class_seq;
 	::Parser::ClassDefinition* class_def;
@@ -308,8 +308,8 @@ class_constructor
 	;
 
 class_constructor_header
-	: PROCEDURE CONSTRUCTOR LPAREN formal_seq RPAREN { $$ = new ProcedureHeader("constructor", $4); }
-	| PROCEDURE CONSTRUCTOR LPAREN RPAREN { $$ = new ProcedureHeader("constructor"); }
+	: PROCEDURE CONSTRUCTOR LPAREN formal_seq RPAREN { $$ = new ProcedureHeader(new Identifier("constructor"), $4); }
+	| PROCEDURE CONSTRUCTOR LPAREN RPAREN { $$ = new ProcedureHeader(new Identifier("constructor")); }
 	;
 
 class_type

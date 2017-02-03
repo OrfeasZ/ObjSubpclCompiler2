@@ -4,23 +4,16 @@
 
 namespace Parser
 {
+	class IExpression;
+
 	class IfStatement :
 		public IStatement
 	{
 	public:
-		IfStatement(IExpression* p_IfExpression, IStatement* p_ThenStatement, IStatement* p_ElseStatement = nullptr) :
-			m_IfExpression(p_IfExpression),
-			m_ThenStatement(p_ThenStatement),
-			m_ElseStatement(p_ElseStatement)
-		{
-
-		}
+		IfStatement(IExpression* p_IfExpression, IStatement* p_ThenStatement, IStatement* p_ElseStatement = nullptr);
 
 	public:
-		virtual void Generate()
-		{
-
-		}
+		virtual void Generate() override;
 
 	public:
 		IExpression* m_IfExpression;

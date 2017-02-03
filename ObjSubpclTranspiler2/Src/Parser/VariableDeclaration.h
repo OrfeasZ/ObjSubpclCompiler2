@@ -4,22 +4,19 @@
 
 namespace Parser
 {
+	class Identifier;
+	typedef std::vector<Identifier*> IDSeq;
+	
+	class VariableType;
+
 	class VariableDeclaration :
 		public IParserType
 	{
 	public:
-		VariableDeclaration(IDSeq* p_IDs, VariableType* p_Type) :
-			m_IDs(p_IDs),
-			m_Type(p_Type)
-		{
-
-		}
+		VariableDeclaration(IDSeq* p_IDs, VariableType* p_Type);
 
 	public:
-		virtual void Generate()
-		{
-
-		}
+		virtual void Generate() override;
 
 	public:
 		IDSeq* m_IDs;

@@ -1,30 +1,21 @@
 #pragma once
 
-#include "IParserType.h"
+#include "Call.h"
 
 namespace Parser
 {
+	class Identifier;
+
 	class MemberCall :
-		public IExpression,
-		public IStatement
+		public Call
 	{
 	public:
-		MemberCall(IExpression* p_VariableExpression, Identifier* p_Name, ExpressionSeq* p_Arguments) :
-			m_VariableExpression(p_VariableExpression),
-			m_Name(p_Name),
-			m_Arguments(p_Arguments)
-		{
-		}
+		MemberCall(IExpression* p_VariableExpression, Identifier* p_Name, ExpressionSeq* p_Arguments = nullptr);
 
 	public:
-		virtual void Generate()
-		{
-
-		}
+		virtual void Generate() override;
 
 	public:
 		IExpression* m_VariableExpression;
-		Identifier* m_Name;
-		ExpressionSeq* m_Arguments;
 	};
 }

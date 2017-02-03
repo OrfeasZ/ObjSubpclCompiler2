@@ -4,22 +4,17 @@
 
 namespace Parser
 {
+	class Procedure;
+	typedef std::vector<Procedure*> ProcedureSeq;
+
 	class ClassBody :
 		public IParserType
 	{
 	public:
-		ClassBody(Procedure* p_Constructor, ProcedureSeq* p_Procedures) :
-			m_Constructor(p_Constructor),
-			m_Procedures(p_Procedures)
-		{
-
-		}
+		ClassBody(Procedure* p_Constructor, ProcedureSeq* p_Procedures = nullptr);
 
 	public:
-		virtual void Generate()
-		{
-
-		}
+		virtual void Generate() override;
 
 	public:
 		Procedure* m_Constructor;
