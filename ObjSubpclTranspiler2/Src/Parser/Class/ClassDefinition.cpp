@@ -208,7 +208,7 @@ void ClassDefinition::GenerateStruct(ClassDefinition* p_Parent)
 
 	// TODO: Make sure we don't have any additional virtual functions or handle them appropriately.
 	if (p_Parent != nullptr)
-		Managers::CodeManager::Writer()->WriteLnInd("struct " + p_Parent->m_Header->m_Name->m_Name + "_t; // Base class.");
+		Managers::CodeManager::Writer()->WriteLnInd("struct " + p_Parent->m_Header->m_Name->m_Name + "_t; // Base class");
 
 	// Write our variables.
 	if (m_Variables)

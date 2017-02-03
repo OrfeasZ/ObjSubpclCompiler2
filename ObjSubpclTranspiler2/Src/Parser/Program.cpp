@@ -11,6 +11,10 @@
 #include <Parser/VariableDeclaration.h>
 #include <Parser/ArrayVariableType.h>
 #include <Parser/VariableType.h>
+#include <Parser/Procedure/Procedure.h>
+#include <Parser/Procedure/ProcedureHeader.h>
+
+#include <Util/Utils.h>
 
 using namespace Parser;
 
@@ -48,6 +52,8 @@ void Program::GenerateClassDefinitions()
 	if (!m_Body->m_Classes)
 		return;
 
+	Managers::CodeManager::Writer()->WriteLnInd("// Class definitions");
+
 	for (auto s_Class : *m_Body->m_Classes)
 		s_Class->GenerateDefinitions();
 }
@@ -57,6 +63,7 @@ void Program::GenerateStaticVariables()
 	if (!m_Body->m_Variables)
 		return;
 
+	Managers::CodeManager::Writer()->WriteLnInd("// Global program variables");
 	for (auto s_Variable : *m_Body->m_Variables)
 	{
 		for (auto s_ID : *s_Variable->m_IDs)
@@ -84,8 +91,23 @@ void Program::GenerateMethods()
 	if (!m_Body->m_Procedures)
 		return;
 
-	// TODO: Write methods.
-	Managers::CodeManager::Writer()->WriteLn();
+	Managers::CodeManager::Writer()->WriteLnInd("// Global program methods");
+	for (auto s_Procedure : *m_Body->m_Procedures)
+	{
+		auto s_Parameters = s_Procedure->m_Header->GetParameters();
+		auto s_FinalParameters = Util::Utils::Join(s_Parameters, ", ");
+
+		Managers::CodeManager::Writer()->WriteLnInd("void " + s_Procedure->m_Header->m_Name->m_Name + "(" + s_FinalParameters + ")");
+		Managers::CodeManager::Writer()->WriteLnInd("{");
+		Managers::CodeManager::Writer()->AddIndent();
+
+		// TODO: Generate method scoped variables.
+		// TODO: Generate method statements.
+
+		Managers::CodeManager::Writer()->RemoveIndent();
+		Managers::CodeManager::Writer()->WriteLnInd("}");
+		Managers::CodeManager::Writer()->WriteLn();
+	}
 }
 
 void Program::GenerateClassBodies()
@@ -93,16 +115,21 @@ void Program::GenerateClassBodies()
 	if (!m_Body->m_Classes)
 		return;
 
+	Managers::CodeManager::Writer()->WriteLnInd("// Class methods");
+
 	for (auto s_Class : *m_Body->m_Classes)
 		s_Class->GenerateBody();
 }
 
 void Program::GenerateMain()
 {
+	Managers::CodeManager::Writer()->WriteLnInd("// Program entry point");
 	Managers::CodeManager::Writer()->WriteLnInd("void main()");
 	Managers::CodeManager::Writer()->WriteLnInd("{");
 
-	// TODO: Write main body statements.
+	// TODO: Initialize global variables.
+	// TODO: Generate main scoped variables.
+	// TODO: Generate main statements.
 
 	Managers::CodeManager::Writer()->WriteLnInd("}");
 	Managers::CodeManager::Writer()->WriteLn();
