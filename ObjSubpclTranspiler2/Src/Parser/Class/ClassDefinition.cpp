@@ -3,6 +3,7 @@
 #include "ClassHeader.h"
 #include <Parser/VariableDeclaration.h>
 #include "ClassBody.h"
+#include "ClassVariableType.h"
 #include <Parser/Identifier.h>
 
 #include <Parser/Procedure/Procedure.h>
@@ -127,6 +128,8 @@ bool ClassDefinition::HasMethod(const std::string& p_Name)
 
 void ClassDefinition::GenerateVtable(ClassDefinition* p_Parent)
 {
+	// TODO: Split these into separate functions when I stop being lazy.
+
 	// Get methods and sort alphabetically (for sanity's sake).
 	// TODO: Do we also need the methods of our parent?
 	auto s_Methods = GetMethods(ProcedureType::Dynamic);
@@ -212,6 +215,19 @@ void ClassDefinition::GenerateStruct(ClassDefinition* p_Parent)
 	{
 		for (auto s_Variable : *m_Variables)
 		{
+			// Make sure we're not trying to instantiate an abstract class.
+			if (s_Variable->m_Type->m_Type == VariableTypes::Class)
+			{
+				auto s_ClassType = (ClassVariableType*) s_Variable->m_Type;
+				auto s_ClassTypeClass = Managers::ClassManager::GetClass(s_ClassType->m_ClassType->m_Name);
+
+				if (s_ClassTypeClass == nullptr)
+					throw new std::exception(("Could not find class '" + s_ClassType->m_ClassType->m_Name + "' used for a variable.").c_str());
+
+				if (s_ClassTypeClass->IsAbstract())
+					throw new std::exception(("Cannot instantiate a variable of abstract type '" + s_ClassType->m_ClassType->m_Name + "'.").c_str());
+			}
+
 			for (auto s_ID : *s_Variable->m_IDs)
 			{
 				Managers::CodeManager::Writer()->WriteInd(s_Variable->m_Type->ToString() + " " + s_ID->m_Name);
@@ -254,6 +270,7 @@ void ClassDefinition::GenerateConstructor(ClassDefinition* p_Parent)
 		Managers::CodeManager::Writer()->WriteLnInd("th->vtbl = &" + m_Header->m_Name->m_Name + "_vtblptr;");
 
 	// TODO: Initialize class member variables.
+	// TODO: Generate constructor scoped variables.
 	// TODO: Generate constructor statements.
 
 	Managers::CodeManager::Writer()->RemoveIndent();
@@ -281,6 +298,7 @@ void ClassDefinition::GenerateMethod(Procedure* p_Procedure)
 	Managers::CodeManager::Writer()->WriteLnInd("{");
 	Managers::CodeManager::Writer()->AddIndent();
 
+	// TODO: Generate method scoped variables.
 	// TODO: Generate method statements.
 
 	Managers::CodeManager::Writer()->RemoveIndent();
