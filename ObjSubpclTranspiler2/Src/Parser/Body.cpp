@@ -1,9 +1,9 @@
 #include "Body.h"
 
-#include "IStatement.h"
+#include <Parser/Statements/IStatement.h>
 #include "VariableDeclaration.h"
-#include "Procedure.h"
-#include "ClassDefinition.h"
+#include <Parser/Procedure/Procedure.h>
+#include <Parser/Class/ClassDefinition.h>
 
 using namespace Parser;
 

@@ -1,7 +1,7 @@
 #include "ProcedureHeader.h"
 
-#include "Identifier.h"
-#include "VariableDeclaration.h"
+#include <Parser/Identifier.h>
+#include <Parser/VariableDeclaration.h>
 
 using namespace Parser;
 

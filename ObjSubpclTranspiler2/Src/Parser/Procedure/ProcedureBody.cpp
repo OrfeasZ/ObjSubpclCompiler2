@@ -1,7 +1,7 @@
 #include "ProcedureBody.h"
 
-#include "IStatement.h"
-#include "VariableDeclaration.h"
+#include <Parser/Statements/IStatement.h>
+#include <Parser/VariableDeclaration.h>
 
 using namespace Parser;
 

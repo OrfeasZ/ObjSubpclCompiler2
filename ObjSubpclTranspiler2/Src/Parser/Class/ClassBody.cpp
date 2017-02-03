@@ -1,6 +1,6 @@
 #include "ClassBody.h"
 
-#include "Procedure.h"
+#include <Parser/Procedure/Procedure.h>
 
 using namespace Parser;
 

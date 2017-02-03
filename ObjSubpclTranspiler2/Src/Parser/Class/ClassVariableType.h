@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VariableType.h"
+#include <Parser/VariableType.h>
 
 namespace Parser
 {

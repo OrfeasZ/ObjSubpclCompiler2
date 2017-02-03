@@ -1,7 +1,7 @@
 #pragma once
 
 #include "IExpression.h"
-#include "IStatement.h"
+#include <Parser/Statements/IStatement.h>
 
 namespace Parser
 {

@@ -1,6 +1,6 @@
 #include "IfStatement.h"
 
-#include "IExpression.h"
+#include <Parser/Expressions/IExpression.h>
 
 using namespace Parser;
 

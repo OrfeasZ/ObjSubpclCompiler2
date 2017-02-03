@@ -1,25 +1,25 @@
 #pragma once
 
-#include "IParserType.h"
+#include <Parser/IParserType.h>
 
 namespace Parser
 {
-	class StatementSeq;
+	class Identifier;
 
 	class VariableDeclaration;
 	typedef std::vector<VariableDeclaration*> VariableSeq;
 
-	class ProcedureBody :
+	class ProcedureHeader :
 		public IParserType
 	{
 	public:
-		ProcedureBody(StatementSeq* p_Body, VariableSeq* p_Variables = nullptr);
+		ProcedureHeader(Identifier* p_Name, VariableSeq* p_Parameters = nullptr);
 
 	public:
 		virtual void Generate() override;
 
 	public:
-		StatementSeq* m_Body;
-		VariableSeq* m_Variables;
+		Identifier* m_Name;
+		VariableSeq* m_Parameters;
 	};
 }

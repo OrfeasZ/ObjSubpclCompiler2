@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IParserType.h"
+#include <Parser/IParserType.h>
 
 namespace Parser
 {

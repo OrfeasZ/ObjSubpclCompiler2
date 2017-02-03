@@ -1,7 +1,7 @@
 #include "ClassDefinition.h"
 
 #include "ClassHeader.h"
-#include "VariableDeclaration.h"
+#include <Parser/VariableDeclaration.h>
 #include "ClassBody.h"
 
 using namespace Parser;

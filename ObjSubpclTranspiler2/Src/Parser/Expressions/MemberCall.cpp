@@ -1,6 +1,6 @@
 #include "MemberCall.h"
 
-#include "Identifier.h"
+#include <Parser/Identifier.h>
 
 using namespace Parser;
 

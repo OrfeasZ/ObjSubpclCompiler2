@@ -1,6 +1,6 @@
 #include "ArrayVariableType.h"
 
-#include "Integer.h"
+#include <Parser/Expressions/Integer.h>
 
 using namespace Parser;
 

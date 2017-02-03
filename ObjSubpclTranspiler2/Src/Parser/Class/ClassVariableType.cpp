@@ -1,7 +1,7 @@
 #include "ClassVariableType.h"
 
-#include "Identifier.h"
-#include "IExpression.h"
+#include <Parser/Identifier.h>
+#include <Parser/Expressions/IExpression.h>
 
 using namespace Parser;
 
