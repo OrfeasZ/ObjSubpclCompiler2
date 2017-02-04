@@ -210,7 +210,7 @@ l_value
 r_value
 	: integer_const { $$ = $1; }
 	| real_const { $$ = $1; }
-	| LPAREN r_value RPAREN { $$ = $2; }
+	| LPAREN r_value RPAREN { $$ = $2; $$->SetEnclosed(true); }
 	| call { $$ = $1; }
 	| unop { $$ = $1; }
 	| binop { $$ = $1; }

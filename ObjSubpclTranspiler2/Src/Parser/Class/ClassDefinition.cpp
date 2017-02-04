@@ -8,6 +8,8 @@
 
 #include <Parser/Procedure/Procedure.h>
 #include <Parser/Procedure/ProcedureHeader.h>
+#include <Parser/Procedure/ProcedureBody.h>
+#include <Parser/Statements/IStatement.h>
 #include <Parser/VariableType.h>
 #include <Parser/ArrayVariableType.h>
 #include <Parser/Expressions/Integer.h>
@@ -282,7 +284,10 @@ void ClassDefinition::GenerateConstructor(ClassDefinition* p_Parent)
 
 	// TODO: Initialize class member variables.
 	// TODO: Generate constructor scoped variables.
-	// TODO: Generate constructor statements.
+	
+	// Generate constructor statements.
+	m_Body->m_Constructor->m_Body->m_Body->SetParents(m_Body->m_Constructor->m_Header->m_Parameters, m_Body->m_Constructor->m_Body->m_Variables, this);
+	m_Body->m_Constructor->m_Body->m_Body->Generate();
 
 	Managers::CodeManager::Writer()->RemoveIndent();
 	Managers::CodeManager::Writer()->WriteLnInd("}");
@@ -310,7 +315,10 @@ void ClassDefinition::GenerateMethod(Procedure* p_Procedure)
 	Managers::CodeManager::Writer()->AddIndent();
 
 	// TODO: Generate method scoped variables.
-	// TODO: Generate method statements.
+	
+	// Generate method statements.
+	p_Procedure->m_Body->m_Body->SetParents(p_Procedure->m_Header->m_Parameters, p_Procedure->m_Body->m_Variables, this);
+	p_Procedure->m_Body->m_Body->Generate();
 
 	Managers::CodeManager::Writer()->RemoveIndent();
 	Managers::CodeManager::Writer()->WriteLnInd("}");

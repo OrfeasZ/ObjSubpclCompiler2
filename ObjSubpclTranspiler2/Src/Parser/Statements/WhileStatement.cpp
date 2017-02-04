@@ -13,5 +13,17 @@ WhileStatement::WhileStatement(BaseExpression* p_WhileExpression, IStatement* p_
 
 void WhileStatement::Generate()
 {
+	m_WhileExpression->SetParents(this);
+	m_DoStatement->SetParents(this);
+	
+	Managers::CodeManager::Writer()->Write("while (");
+	m_WhileExpression->Generate();
+	Managers::CodeManager::Writer()->WriteLn(")");
+	Managers::CodeManager::Writer()->WriteLnInd("{");
+	Managers::CodeManager::Writer()->AddIndent();
 
+	m_DoStatement->Generate();
+
+	Managers::CodeManager::Writer()->RemoveIndent();
+	Managers::CodeManager::Writer()->WriteInd("}");
 }

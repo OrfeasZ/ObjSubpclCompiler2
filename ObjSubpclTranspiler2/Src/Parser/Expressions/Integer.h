@@ -14,6 +14,7 @@ namespace Parser
 
 	public:
 		virtual void Generate() override;
+		virtual std::string ToString() override;
 
 	public:
 		int64_t m_Value;

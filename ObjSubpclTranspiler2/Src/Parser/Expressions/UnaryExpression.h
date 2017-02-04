@@ -22,6 +22,7 @@ namespace Parser
 
 	public:
 		virtual void Generate() override;
+		virtual std::string ToString() override;
 
 	public:
 		BaseExpression* m_Expression;

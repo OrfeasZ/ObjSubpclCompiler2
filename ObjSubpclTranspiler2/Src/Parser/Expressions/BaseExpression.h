@@ -10,10 +10,18 @@ namespace Parser
 		public GeneratableChild
 	{
 	public:
+		BaseExpression() :
+			m_Enclosed(false)
+		{
+		}
+
+	public:
 		inline void SetEnclosed(bool p_Enclosed)
 		{
 			m_Enclosed = p_Enclosed;
 		}
+
+		virtual std::string ToString() = 0;
 
 	public:
 		bool m_Enclosed;

@@ -16,6 +16,7 @@ namespace Parser
 
 	public:
 		virtual void Generate() override;
+		virtual std::string ToString() override;
 
 	public:
 		Identifier* m_Name;

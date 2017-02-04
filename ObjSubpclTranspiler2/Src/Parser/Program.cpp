@@ -13,6 +13,8 @@
 #include <Parser/VariableType.h>
 #include <Parser/Procedure/Procedure.h>
 #include <Parser/Procedure/ProcedureHeader.h>
+#include <Parser/Procedure/ProcedureBody.h>
+#include <Parser/Statements/IStatement.h>
 
 #include <Util/Utils.h>
 
@@ -102,7 +104,10 @@ void Program::GenerateMethods()
 		Managers::CodeManager::Writer()->AddIndent();
 
 		// TODO: Generate method scoped variables.
-		// TODO: Generate method statements.
+		
+		// Generate method statements.
+		s_Procedure->m_Body->m_Body->SetParents(s_Procedure->m_Header->m_Parameters, s_Procedure->m_Body->m_Variables, nullptr);
+		s_Procedure->m_Body->m_Body->Generate();
 
 		Managers::CodeManager::Writer()->RemoveIndent();
 		Managers::CodeManager::Writer()->WriteLnInd("}");
