@@ -1,65 +1,109 @@
 program something;
-	var a, b : integer;
-		c : real;
-		cc : Test();
-		cc2 : Test2(a, b);
-		cc3 : Test(1 + 2, 5);
+	var animals : array[3] of $Animal;
+		printer : AnimalPrinter();
 
-	procedure A();
-	var blah : real;
+	procedure CreateAnimals(dogAge, catAge, tortAge : real);
 	begin
-
+		animals[0] := new Dog(dogAge);
+		animals[1] := new Cat(catAge);
+		animals[2] := new Tortoise(catAge);
 	end;
 
-	class Test
-	var d : real;
-		e, f : integer;
-		g : array[10] of integer;
-
-	begin		
-		procedure constructor(x, y : real);
+	class Animal
+	var age : real;
+		humanAge : real;
+		type : integer;
+	begin
+		procedure constructor(animalAge : real);
 		begin
-
+			age := animalAge;
 		end;
 
-		abstract procedure huhwhat();
+		abstract procedure getType();
 
-		dynamic procedure whatever();
-		var test2 : integer;
+		dynamic procedure calculateHumanAge();
 		begin
-			test2 := 1 + 5;
-			a := b / d;
-			A(asd);
-		end;
-
-		dynamic procedure whatever2(a, b : integer; d : Test());
-		begin
-
+			humanAge := age;
 		end;
 	end;
 
-	class Test2 extends Test
+	class Dog extends Animal
 	begin
-		procedure constructor(a, b : array[1] of real);
+		procedure constructor(animalAge : real);
 		begin
-
+			/* Call base constructor */
+			super.ctor(animalAge);
 		end;
 
-		procedure huhwhat();
+		procedure getType();
 		begin
-			y := 1245;
+			type := 1;
 		end;
 
-		procedure lol();
+		dynamic procedure calculateHumanAge();
 		begin
-			x := 123;
+			/* Average human lifespan is 75 years */
+			/* Average dog lifespan is 12 years */
+			humanAge := (age / 12.0) * 75.0;
+		end;
+	end;
+
+	class Cat extends Animal
+	begin
+		procedure constructor(animalAge : real);
+		begin
+			/* Call base constructor */
+			super.ctor(animalAge);
+		end;
+
+		procedure getType();
+		begin
+			type := 2;
+		end;
+
+		dynamic procedure calculateHumanAge();
+		begin
+			/* Average human lifespan is 75 years */
+			/* Average cat lifespan is 16 years */
+			humanAge := (age / 16.0) * 75.0;
+		end;
+	end;
+
+	class Tortoise extends Animal
+	begin
+		procedure constructor(animalAge : real);
+		begin
+			/* Call base constructor */
+			super.ctor(animalAge);
+		end;
+
+		procedure getType();
+		begin
+			type := 3;
+		end;
+
+		/* Tortoises have the same average lifespan as humans, so we don't need to override anything here */
+	end;
+
+	class AnimalPrinter
+	begin
+		procedure constructor();
+		begin
+		end;
+
+		procedure print(animal : $Animal);
+		begin
+			PrintOut(animal.type);
+			PrintOut(animal.age);
+			PrintOut(animal.humanAge);
 		end;
 	end;
 
 	begin
-		cc.whatever();
-		cc.whatever(12 + 13, 15, cc.test);
-
-		cc.pancakes := nickisafgt;
+		CreateAnimals();
+		
+		printer.print(animals[0]);
+		printer.print(animals[1]);
+		printer.print(animals[2]);
 	end
 .
