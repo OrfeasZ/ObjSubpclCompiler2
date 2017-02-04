@@ -15,6 +15,7 @@ namespace Parser
 	public:
 		virtual void Generate() override;
 		virtual std::string ToString() override;
+		virtual bool IsMemberCall() override { return true; }
 
 	public:
 		BaseExpression* m_VariableExpression;

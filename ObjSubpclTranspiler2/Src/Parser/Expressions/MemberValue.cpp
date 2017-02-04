@@ -22,6 +22,8 @@ std::string MemberValue::ToString()
 	std::string s_String = "";
 
 	// TODO
+	m_VariableExpression->SetParents(this);
+	s_String += m_VariableExpression->ToString();
 
 	if (m_Enclosed)
 		s_String = "(" + s_String + ")";

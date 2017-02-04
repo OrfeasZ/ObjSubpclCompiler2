@@ -11,8 +11,10 @@
 namespace Parser
 {
 	class IStatement : 
-		public GeneratableChild
+		virtual public GeneratableChild
 	{
+	public:
+		virtual bool IsMemberCall() { return false; }
 	};
 
 	class StatementSeq :

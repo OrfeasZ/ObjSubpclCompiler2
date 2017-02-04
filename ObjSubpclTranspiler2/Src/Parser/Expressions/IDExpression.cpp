@@ -19,7 +19,7 @@ void IDExpression::Generate()
 
 std::string IDExpression::ToString()
 {
-	std::string s_String = m_ID->GenerateAccessor(this, false);
+	std::string s_String = m_ID->GenerateMemberAccessor(this);
 
 	if (m_Enclosed)
 		s_String = "(" + s_String + ")";

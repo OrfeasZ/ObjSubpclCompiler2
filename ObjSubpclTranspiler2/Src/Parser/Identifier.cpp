@@ -9,14 +9,6 @@ Identifier::Identifier(const std::string& p_Name) :
 {
 }
 
-std::string Identifier::GenerateAccessor(GeneratableChild* p_ChildData, bool p_Call)
-{
-	if (p_Call)
-		return GenerateCallAccessor(p_ChildData);
-
-	return GenerateMemberAccessor(p_ChildData);
-}
-
 std::string Identifier::GenerateMemberAccessor(GeneratableChild* p_ChildData)
 {
 	// Our search priority is: block -> params -> class -> global.
@@ -40,8 +32,34 @@ std::string Identifier::GenerateMemberAccessor(GeneratableChild* p_ChildData)
 	throw std::exception(("Use of undefined variable '" + m_Name + "'.").c_str());
 }
 
-std::string Identifier::GenerateCallAccessor(GeneratableChild* p_ChildData)
+std::string Identifier::GenerateCallAccessor(GeneratableChild* p_ChildData, bool& p_Class)
 {
+	bool s_ClassOnly = p_Class;
+
 	// Our search priority is: class -> parents -> global.
-	return "";
+	if (p_ChildData->m_ParentClass)
+	{
+		p_Class = true;
+
+		std::string s_MethodName;
+		if (p_ChildData->m_ParentClass->HasMethod(m_Name, s_MethodName, true))
+			return s_MethodName;
+		
+		if (p_ChildData->m_ParentClass->HasVirtualMethod(s_MethodName))
+			return "((struct " + p_ChildData->m_ParentClass->m_Header->m_Name->m_Name + "_vtbl_t*) th->vtbl)->" + m_Name;
+	}
+
+	if (s_ClassOnly)
+		throw std::exception(("Use of undefined method '" + m_Name + "'.").c_str());
+
+	p_Class = false;
+
+	auto s_ProgramBody = Parser::ParserTree::GetProgram()->m_Body;
+
+	if (s_ProgramBody && s_ProgramBody->m_Procedures)
+		for (auto s_Procedure : *s_ProgramBody->m_Procedures)
+			if (s_Procedure->m_Header->m_Name->m_Name == m_Name)
+				return m_Name;
+
+	throw std::exception(("Use of undefined method '" + m_Name + "'.").c_str());
 }

@@ -7,7 +7,7 @@
 namespace Parser
 {
 	class BaseExpression :
-		public GeneratableChild
+		virtual public GeneratableChild
 	{
 	public:
 		BaseExpression() :
@@ -22,6 +22,7 @@ namespace Parser
 		}
 
 		virtual std::string ToString() = 0;
+		virtual bool IsID() { return false; }
 
 	public:
 		bool m_Enclosed;

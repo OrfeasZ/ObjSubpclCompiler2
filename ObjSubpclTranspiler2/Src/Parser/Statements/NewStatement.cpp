@@ -8,7 +8,7 @@
 #include <Util/Utils.h>
 
 #include <Parser/Class/ClassDefinition.h>
-#include <Parser/Class/ClassHeader.h>>
+#include <Parser/Class/ClassHeader.h>
 
 #include <Parser/Identifier.h>
 

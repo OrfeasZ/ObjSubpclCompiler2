@@ -28,7 +28,8 @@ namespace Parser
 
 		bool IsAbstract();
 		bool HasMember(const std::string& p_Name);
-		bool HasMethod(const std::string& p_Name, bool& p_Virtual, bool p_CheckParent = false);
+		bool HasMethod(const std::string& p_Name, std::string& p_MethodName, bool p_CheckParent = false);
+		bool HasVirtualMethod(const std::string& p_Name);
 
 	private:
 		std::unordered_map<std::string, Procedure*> GetAllVirtualMethods();

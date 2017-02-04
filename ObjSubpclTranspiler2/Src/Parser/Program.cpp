@@ -48,6 +48,24 @@ void Program::GenerateHeader()
 	Managers::CodeManager::Writer()->WriteLnInd("#include <string.h>");
 	Managers::CodeManager::Writer()->WriteLnInd("#include <stdlib.h>");
 	Managers::CodeManager::Writer()->WriteLn();
+
+	// Write our PrintOut functions.
+	Managers::CodeManager::Writer()->WriteLnInd("void PrintOut(long val)");
+	Managers::CodeManager::Writer()->WriteLnInd("{");
+	Managers::CodeManager::Writer()->AddIndent();
+	Managers::CodeManager::Writer()->WriteLnInd("printf(\"%ld\\n\", val);");
+	Managers::CodeManager::Writer()->RemoveIndent();
+	Managers::CodeManager::Writer()->WriteLnInd("}");
+	Managers::CodeManager::Writer()->WriteLn();
+
+	Managers::CodeManager::Writer()->WriteLnInd("void PrintOut(double val)");
+	Managers::CodeManager::Writer()->WriteLnInd("{");
+	Managers::CodeManager::Writer()->AddIndent();
+	Managers::CodeManager::Writer()->WriteLnInd("printf(\"%f\\n\", val);");
+	Managers::CodeManager::Writer()->RemoveIndent();
+	Managers::CodeManager::Writer()->WriteLnInd("}");
+	Managers::CodeManager::Writer()->WriteLn();
+
 }
 
 void Program::GenerateClassDefinitions()
@@ -73,7 +91,8 @@ void Program::GenerateStaticVariables()
 		{
 			Managers::CodeManager::Writer()->WriteInd("static " + s_Variable->m_Type->ToString());
 
-			if (s_Variable->m_Type->m_Type == VariableTypes::ClassPointer)
+			if (s_Variable->m_Type->m_Type == VariableTypes::ClassPointer ||
+				s_Variable->m_Type->m_Type == VariableTypes::Class)
 				Managers::CodeManager::Writer()->Write("*");
 
 			if (s_Variable->m_Type->m_Type == VariableTypes::Array)

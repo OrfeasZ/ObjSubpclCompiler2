@@ -13,6 +13,8 @@
 #include <Parser/VariableType.h>
 #include <Parser/ArrayVariableType.h>
 #include <Parser/Expressions/Integer.h>
+#include <Parser/Expressions/MemberCall.h>
+#include <Parser/Expressions/IDExpression.h>
 
 #include <Managers/ClassManager.h>
 #include <Managers/CodeManager.h>
@@ -110,22 +112,13 @@ bool ClassDefinition::HasMember(const std::string& p_Name)
 	return s_Parent->HasMember(p_Name);
 }
 
-bool ClassDefinition::HasMethod(const std::string& p_Name, bool& p_Virtual, bool p_CheckParent)
+bool ClassDefinition::HasMethod(const std::string& p_Name, std::string& p_MethodName, bool p_CheckParent)
 {
-	p_Virtual = false;
+	p_MethodName = m_Header->m_Name->m_Name + "__" + p_Name;
 
 	for (auto s_Method : GetMethods(ProcedureType::Standard))
 		if (s_Method->m_Header->m_Name->m_Name == p_Name)
 			return true;
-
-	for (auto s_Method : GetMethods(ProcedureType::Dynamic))
-	{
-		if (s_Method->m_Header->m_Name->m_Name == p_Name)
-		{
-			p_Virtual = true;
-			return true;
-		}
-	}
 
 	if (!p_CheckParent)
 		return false;
@@ -140,7 +133,18 @@ bool ClassDefinition::HasMethod(const std::string& p_Name, bool& p_Virtual, bool
 	if (s_Parent == nullptr)
 		return false;
 
-	return s_Parent->HasMethod(p_Name, p_Virtual, p_CheckParent);
+	return s_Parent->HasMethod(p_Name, p_MethodName, p_CheckParent);
+}
+
+bool ClassDefinition::HasVirtualMethod(const std::string& p_Name)
+{
+	auto s_AllVirtuals = GetAllVirtualMethods();
+
+	for (auto s_Method : s_AllVirtuals)
+		if (s_Method.second->m_Header->m_Name->m_Name == p_Name)
+			return true;
+	
+	return false;
 }
 
 void ClassDefinition::GenerateForwardDeclarations(ClassDefinition* p_Parent)
@@ -305,7 +309,8 @@ void ClassDefinition::GenerateStruct(ClassDefinition* p_Parent)
 			{
 				Managers::CodeManager::Writer()->WriteInd(s_Variable->m_Type->ToString());
 				
-				if (s_Variable->m_Type->m_Type == VariableTypes::ClassPointer)
+				if (s_Variable->m_Type->m_Type == VariableTypes::ClassPointer ||
+					s_Variable->m_Type->m_Type == VariableTypes::Class)
 					Managers::CodeManager::Writer()->Write("*");
 
 				if (s_Variable->m_Type->m_Type == VariableTypes::Array)
@@ -356,8 +361,66 @@ void ClassDefinition::GenerateConstructor(ClassDefinition* p_Parent)
 	// TODO: Call constructor of parent.
 	// TODO: If parent constructor has parameters make sure we have a statement that calls his constructor.
 
+	if (p_Parent)
+	{
+		auto s_ParentArgumentSize = p_Parent->m_Body->m_Constructor->m_Header->m_Parameters ? p_Parent->m_Body->m_Constructor->m_Header->m_Parameters->size() : 0;
+		bool s_HasConstructorCall = false;
+
+		for (auto s_Statement : *m_Body->m_Constructor->m_Body->m_Body)
+		{
+			if (!s_Statement->IsMemberCall())
+				continue;
+
+			s_Statement->SetParents(m_Body->m_Constructor->m_Header->m_Parameters, m_Body->m_Constructor->m_Body->m_Variables, this);
+
+			auto s_MemberCall = (MemberCall*) s_Statement;
+
+			if (!s_MemberCall->m_VariableExpression->IsID())
+				continue;
+
+			auto s_VariableExpression = (IDExpression*) s_MemberCall->m_VariableExpression;
+
+			if (s_VariableExpression->m_ID->m_Name != "super")
+				continue;
+
+			if (s_MemberCall->m_Name->m_Name != "ctor")
+				continue;
+
+			auto s_ArgumentSize = s_MemberCall->m_Arguments ? s_MemberCall->m_Arguments->size() : 0;
+			if (s_ArgumentSize != s_ParentArgumentSize)
+				throw std::exception(("Attempting to call base constructor of '" + m_Header->m_Name->m_Name + "' with the wrong number of arguments.").c_str());
+
+			std::vector<std::string> s_Arguments;
+
+			// Serialize our arguments.
+			if (s_MemberCall->m_Arguments)
+			{
+				for (auto s_Expression : *s_MemberCall->m_Arguments)
+				{
+					s_Expression->SetParents(s_Statement);
+					s_Arguments.push_back(s_Expression->ToString());
+				}
+			}
+
+			// If this is a class call add th as the first argument.
+			s_Arguments.insert(s_Arguments.begin(), "th");
+
+			Managers::CodeManager::Writer()->WriteInd(m_Header->m_Extends->m_Name + "__ctor");
+			Managers::CodeManager::Writer()->WriteLn("(" + Util::Utils::Join(s_Arguments, ", ") + ");");
+
+			s_HasConstructorCall = true;
+			break;
+		}
+
+		if (!s_HasConstructorCall && s_ParentArgumentSize > 0)
+			throw std::exception(("Constructor of class '" + m_Header->m_Name->m_Name + "' does not call base class constructor.").c_str());
+
+		if (!s_HasConstructorCall)
+			Managers::CodeManager::Writer()->WriteLnInd(m_Header->m_Extends->m_Name + "__ctor(th);");
+	}
+
 	// Init our vtable.
-	if (GetMethods(ProcedureType::Dynamic).size() > 0)
+	if (GetFinalVirtualMethods().size() > 0)
 		Managers::CodeManager::Writer()->WriteLnInd("th->vtbl = &" + m_Header->m_Name->m_Name + "_vtblptr;");
 
 	// TODO: Initialize class member variables.
