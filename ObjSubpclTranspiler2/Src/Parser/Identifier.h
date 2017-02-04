@@ -11,7 +11,7 @@ namespace Parser
 	public:
 		Identifier(const std::string& p_Name);
 
-		std::string GenerateMemberAccessor(GeneratableChild* p_ChildData);
+		std::string GenerateMemberAccessor(GeneratableChild* p_ChildData, const std::string& p_ClassName);
 		std::string GenerateCallAccessor(GeneratableChild* p_ChildData, const std::string& p_ClassName, bool& p_Class);
 
 	public:

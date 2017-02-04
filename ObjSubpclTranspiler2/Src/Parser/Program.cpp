@@ -50,14 +50,6 @@ void Program::GenerateHeader()
 	Managers::CodeManager::Writer()->WriteLn();
 
 	// Write our PrintOut functions.
-	Managers::CodeManager::Writer()->WriteLnInd("void PrintOut(long val)");
-	Managers::CodeManager::Writer()->WriteLnInd("{");
-	Managers::CodeManager::Writer()->AddIndent();
-	Managers::CodeManager::Writer()->WriteLnInd("printf(\"%ld\\n\", val);");
-	Managers::CodeManager::Writer()->RemoveIndent();
-	Managers::CodeManager::Writer()->WriteLnInd("}");
-	Managers::CodeManager::Writer()->WriteLn();
-
 	Managers::CodeManager::Writer()->WriteLnInd("void PrintOut(double val)");
 	Managers::CodeManager::Writer()->WriteLnInd("{");
 	Managers::CodeManager::Writer()->AddIndent();

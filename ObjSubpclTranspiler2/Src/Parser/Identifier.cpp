@@ -9,7 +9,7 @@ Identifier::Identifier(const std::string& p_Name) :
 {
 }
 
-std::string Identifier::GenerateMemberAccessor(GeneratableChild* p_ChildData)
+std::string Identifier::GenerateMemberAccessor(GeneratableChild* p_ChildData, const std::string& p_ClassName)
 {
 	VariableType* s_Type = nullptr;
 
@@ -24,7 +24,7 @@ std::string Identifier::GenerateMemberAccessor(GeneratableChild* p_ChildData)
 
 	// Search the class members.
 	if (p_ChildData->m_ParentClass && p_ChildData->m_ParentClass->HasMember(m_Name, s_Type))
-		return "th->" + m_Name;
+		return p_ClassName + "->" + m_Name;
 
 	// Search the global variables.
 	auto s_ProgramBody = Parser::ParserTree::GetProgram()->m_Body;

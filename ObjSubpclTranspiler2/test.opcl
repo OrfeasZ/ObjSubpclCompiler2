@@ -1,12 +1,12 @@
 program something;
 	var animals : array[3] of $Animal;
 		printer : AnimalPrinter();
-	
+
 	procedure CreateAnimals(dogAge, catAge, tortAge : real);
 	begin
 		animals[0] := new Dog(dogAge);
 		animals[1] := new Cat(catAge);
-		animals[2] := new Tortoise(catAge);
+		animals[2] := new Tortoise(tortAge);
 	end;
 
 	class Animal
@@ -121,7 +121,7 @@ program something;
 	end;
 
 	begin
-		CreateAnimals();
+		CreateAnimals(5, 4, 37);
 		printer.print(animals);
 	end
 .
