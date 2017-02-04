@@ -284,19 +284,27 @@ void ClassDefinition::GenerateStruct(ClassDefinition* p_Parent)
 	Managers::CodeManager::Writer()->WriteLnInd("{");
 	Managers::CodeManager::Writer()->AddIndent();
 
+	bool s_HasContent = false;
+
 	// Write our vtable variable.
 	// Write only if our parent doesn't have a vtable himself.
 	if (GetUniqueVirtualMethods().size() > 0 && (p_Parent == nullptr || p_Parent->GetAllVirtualMethods().size() == 0))
 	{
 		Managers::CodeManager::Writer()->WriteLnInd("void* vtbl;");
+		s_HasContent = true;
 	}
 
 	if (p_Parent != nullptr)
+	{
 		Managers::CodeManager::Writer()->WriteLnInd("struct " + p_Parent->m_Header->m_Name->m_Name + "_t; // Base class");
+		s_HasContent = true;
+	}
 
 	// Write our variables.
 	if (m_Variables)
 	{
+		s_HasContent = true;
+
 		for (auto s_Variable : *m_Variables)
 		{
 			// Make sure we're not trying to instantiate an abstract class.
@@ -344,6 +352,11 @@ void ClassDefinition::GenerateStruct(ClassDefinition* p_Parent)
 		}
 	}
 
+	// If we don't have any variables or a vtable or any parent class 
+	// then just write a dummy variable to please msvc.
+	if (!s_HasContent)
+		Managers::CodeManager::Writer()->WriteLnInd("char dummy;");
+
 	Managers::CodeManager::Writer()->RemoveIndent();
 	Managers::CodeManager::Writer()->WriteLnInd("};");
 	Managers::CodeManager::Writer()->WriteLn();
@@ -365,14 +378,13 @@ void ClassDefinition::GenerateConstructor(ClassDefinition* p_Parent)
 	// Clear our memory.
 	Managers::CodeManager::Writer()->WriteLnInd("memset(th, 0x00, sizeof(struct " + m_Header->m_Name->m_Name + "_t));");
 	
-	// TODO: Call constructor of parent.
-	// TODO: If parent constructor has parameters make sure we have a statement that calls his constructor.
-
+	// If we have a parent then make sure we're calling his constructor.
 	if (p_Parent)
 	{
 		auto s_ParentArgumentSize = p_Parent->m_Body->m_Constructor->m_Header->m_Parameters ? p_Parent->m_Body->m_Constructor->m_Header->m_Parameters->size() : 0;
 		bool s_HasConstructorCall = false;
 
+		// Try to find a super.ctor() call.
 		for (auto s_Statement : *m_Body->m_Constructor->m_Body->m_Body)
 		{
 			if (!s_Statement->IsMemberCall())
@@ -419,9 +431,11 @@ void ClassDefinition::GenerateConstructor(ClassDefinition* p_Parent)
 			break;
 		}
 
+		// If we haven't found one and the parent constructor has args then we're doing something wrong.
 		if (!s_HasConstructorCall && s_ParentArgumentSize > 0)
 			throw std::exception(("Constructor of class '" + m_Header->m_Name->m_Name + "' does not call base class constructor.").c_str());
 
+		// Otherwise, if there are no arguments just generate a standard constructor call.
 		if (!s_HasConstructorCall)
 			Managers::CodeManager::Writer()->WriteLnInd(m_Header->m_Extends->m_Name + "__ctor(th);");
 	}
