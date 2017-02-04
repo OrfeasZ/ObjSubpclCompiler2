@@ -27,7 +27,7 @@ std::vector<std::string> ProcedureHeader::GetParameters()
 		{
 			std::string s_Parameter = s_ParameterGroup->m_Type->ToString();
 
-			if (s_ParameterGroup->m_Type->m_Type == VariableTypes::Class)
+			if (s_ParameterGroup->m_Type->m_Type == VariableTypes::Class || s_ParameterGroup->m_Type->m_Type == VariableTypes::ClassPointer)
 				s_Parameter += "*";
 			else if (s_ParameterGroup->m_Type->m_Type == VariableTypes::Array)
 				s_Parameter += "**";

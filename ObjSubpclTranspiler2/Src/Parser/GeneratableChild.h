@@ -4,9 +4,7 @@
 
 namespace Parser
 {
-	class VariableDeclaration;
-	typedef std::vector<VariableDeclaration*> VariableSeq;
-
+	class VariableSeq;
 	class ClassDefinition;
 
 	class GeneratableChild

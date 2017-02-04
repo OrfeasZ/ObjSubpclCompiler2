@@ -5,9 +5,7 @@
 namespace Parser
 {
 	class StatementSeq;
-
-	class VariableDeclaration;
-	typedef std::vector<VariableDeclaration*> VariableSeq;
+	class VariableSeq;
 
 	class Procedure;
 	typedef std::vector<Procedure*> ProcedureSeq;

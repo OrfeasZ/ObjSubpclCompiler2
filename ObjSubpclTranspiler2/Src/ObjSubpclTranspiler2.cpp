@@ -51,7 +51,17 @@ int main(int argc, char* argv[])
 
 	printf("Transpiling code...\n");
 
-	Parser::ParserTree::GetProgram()->Generate();
+	try
+	{
+		Parser::ParserTree::GetProgram()->Generate();
+	}
+	catch (std::exception& ex)
+	{
+		printf("Code generation failed with error:\n");
+		printf(ex.what());
+		printf("\n");
+		return 1;
+	}
 
 	printf("\n");
 	printf(Managers::CodeManager::Writer()->GetBuffer().c_str());

@@ -46,6 +46,7 @@ void Program::GenerateHeader()
 	// Write our includes.
 	Managers::CodeManager::Writer()->WriteLnInd("#include <stdio.h>");
 	Managers::CodeManager::Writer()->WriteLnInd("#include <string.h>");
+	Managers::CodeManager::Writer()->WriteLnInd("#include <stdlib.h>");
 	Managers::CodeManager::Writer()->WriteLn();
 }
 
@@ -70,12 +71,25 @@ void Program::GenerateStaticVariables()
 	{
 		for (auto s_ID : *s_Variable->m_IDs)
 		{
-			Managers::CodeManager::Writer()->WriteInd("static " + s_Variable->m_Type->ToString() + " " + s_ID->m_Name);
+			Managers::CodeManager::Writer()->WriteInd("static " + s_Variable->m_Type->ToString());
+
+			if (s_Variable->m_Type->m_Type == VariableTypes::ClassPointer)
+				Managers::CodeManager::Writer()->Write("*");
+
+			if (s_Variable->m_Type->m_Type == VariableTypes::Array)
+			{
+				auto s_Type = (ArrayVariableType*) s_Variable->m_Type;
+
+				if (s_Type->m_InnerType->m_Type == VariableTypes::ClassPointer)
+					Managers::CodeManager::Writer()->Write("*");
+			}
+
+			Managers::CodeManager::Writer()->Write(" " + s_ID->m_Name);
 
 			// If this is an array then add the element count after the variable name.
 			if (s_Variable->m_Type->m_Type == VariableTypes::Array)
 			{
-				auto s_Type = (ArrayVariableType*)s_Variable->m_Type;
+				auto s_Type = (ArrayVariableType*) s_Variable->m_Type;
 				Managers::CodeManager::Writer()->Write("[");
 				Managers::CodeManager::Writer()->Write(s_Type->m_ElementCount->m_Value);
 				Managers::CodeManager::Writer()->Write("]");

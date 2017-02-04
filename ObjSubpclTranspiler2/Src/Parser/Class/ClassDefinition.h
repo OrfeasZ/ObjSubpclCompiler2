@@ -9,9 +9,7 @@ namespace Parser
 	class Procedure;
 	class ClassHeader;
 	class VariableType;
-
-	class VariableDeclaration;
-	typedef std::vector<VariableDeclaration*> VariableSeq;
+	class VariableSeq;
 
 	class ClassBody;
 
@@ -32,6 +30,7 @@ namespace Parser
 
 	private:
 		void GenerateStruct(ClassDefinition* p_Parent);
+		void GenerateForwardDeclarations(ClassDefinition* p_Parent);
 		void GenerateVtable(ClassDefinition* p_Parent);
 		void GenerateConstructor(ClassDefinition* p_Parent);
 		void GenerateMethods(ClassDefinition* p_Parent);

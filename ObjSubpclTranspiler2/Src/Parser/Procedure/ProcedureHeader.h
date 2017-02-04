@@ -7,9 +7,7 @@
 namespace Parser
 {
 	class Identifier;
-
-	class VariableDeclaration;
-	typedef std::vector<VariableDeclaration*> VariableSeq;
+	class VariableSeq;
 
 	class ProcedureHeader
 	{

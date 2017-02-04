@@ -42,11 +42,12 @@ void ClassDefinition::GenerateDefinitions()
 
 		// If we have a parent set but he doesn't exist then something is wrong.
 		if (s_Parent == nullptr)
-			throw new std::exception(("Could not find parent '" + m_Header->m_Extends->m_Name + "' for class '" + m_Header->m_Name->m_Name + "'.").c_str());
+			throw std::exception(("Could not find parent '" + m_Header->m_Extends->m_Name + "' for class '" + m_Header->m_Name->m_Name + "'.").c_str());
 	}
 
 	// Generate code for this class.
 	GenerateStruct(s_Parent);
+	GenerateForwardDeclarations(s_Parent);
 	GenerateVtable(s_Parent);
 }
 
@@ -84,13 +85,12 @@ bool ClassDefinition::IsAbstract()
 
 bool ClassDefinition::HasMember(const std::string& p_Name)
 {
-	if (m_Variables == nullptr)
-		return false;
-
-	for (auto s_Variable : *m_Variables)
-		for (auto s_ID : *s_Variable->m_IDs)
-			if (s_ID->m_Name == p_Name)
-				return true;
+	// Check local variables.
+	if (m_Variables)
+		for (auto s_Variable : *m_Variables)
+			for (auto s_ID : *s_Variable->m_IDs)
+				if (s_ID->m_Name == p_Name)
+					return true;
 
 	// Search the parent variables.
 	if (m_Header->m_Extends == nullptr)
@@ -138,6 +138,35 @@ bool ClassDefinition::HasMethod(const std::string& p_Name, bool& p_Virtual, bool
 	return s_Parent->HasMethod(p_Name, p_Virtual, p_CheckParent);
 }
 
+void ClassDefinition::GenerateForwardDeclarations(ClassDefinition* p_Parent)
+{
+	Managers::CodeManager::Writer()->WriteLnInd("// Method forward declarations for class " + m_Header->m_Name->m_Name);
+
+	// Constructor forward declaration.
+	{
+		auto s_Parameters = m_Body->m_Constructor->m_Header->GetParameters();
+		s_Parameters.insert(s_Parameters.begin(), "struct " + m_Header->m_Name->m_Name + "_t* th");
+
+		auto s_FinalParameters = Util::Utils::Join(s_Parameters, ", ");
+
+		// Write forward declaration.
+		Managers::CodeManager::Writer()->WriteLnInd("void " + m_Header->m_Name->m_Name + "__ctor(" + s_FinalParameters + ");");
+	}
+
+	for (auto s_Method : *m_Body->m_Procedures)
+	{
+		auto s_Parameters = s_Method->m_Header->GetParameters();
+		s_Parameters.insert(s_Parameters.begin(), "struct " + m_Header->m_Name->m_Name + "_t* th");
+
+		auto s_FinalParameters = Util::Utils::Join(s_Parameters, ", ");
+
+		// Write forward declaration.
+		Managers::CodeManager::Writer()->WriteLnInd("void " + m_Header->m_Name->m_Name + "__" + s_Method->m_Header->m_Name->m_Name + "(" + s_FinalParameters + ");");
+	}
+
+	Managers::CodeManager::Writer()->WriteLn();
+}
+
 void ClassDefinition::GenerateVtable(ClassDefinition* p_Parent)
 {
 	// TODO: Split these into separate functions when I stop being lazy.
@@ -155,7 +184,7 @@ void ClassDefinition::GenerateVtable(ClassDefinition* p_Parent)
 		return p_Left->m_Header->m_Name->m_Name < p_Right->m_Header->m_Name->m_Name; 
 	});
 
-	// Generate method typedefs and forward declarations.
+	// Generate method typedefs.
 	// TODO: Make sure we don't have any additional virtual functions or handle them appropriately.
 	Managers::CodeManager::Writer()->WriteLnInd("// Vtable method descriptors for class " + m_Header->m_Name->m_Name);
 
@@ -169,11 +198,9 @@ void ClassDefinition::GenerateVtable(ClassDefinition* p_Parent)
 		auto s_FinalParameters = Util::Utils::Join(s_Parameters, ", ");
 
 		Managers::CodeManager::Writer()->WriteLn("(" + s_FinalParameters + ");");
-
-		// Write forward declaration.
-		Managers::CodeManager::Writer()->WriteLnInd("void " + m_Header->m_Name->m_Name + "__" + s_Method->m_Header->m_Name->m_Name + "(" + s_FinalParameters + ");");
-		Managers::CodeManager::Writer()->WriteLn();
 	}
+
+	Managers::CodeManager::Writer()->WriteLn();
 	
 	// Write the vtable structure.
 	Managers::CodeManager::Writer()->WriteLnInd("// Vtable descriptor for class " + m_Header->m_Name->m_Name);
@@ -229,21 +256,34 @@ void ClassDefinition::GenerateStruct(ClassDefinition* p_Parent)
 		for (auto s_Variable : *m_Variables)
 		{
 			// Make sure we're not trying to instantiate an abstract class.
-			if (s_Variable->m_Type->m_Type == VariableTypes::Class)
+			if (s_Variable->m_Type->m_Type == VariableTypes::Class || s_Variable->m_Type->m_Type == VariableTypes::ClassPointer)
 			{
 				auto s_ClassType = (ClassVariableType*) s_Variable->m_Type;
 				auto s_ClassTypeClass = Managers::ClassManager::GetClass(s_ClassType->m_ClassType->m_Name);
 
 				if (s_ClassTypeClass == nullptr)
-					throw new std::exception(("Could not find class '" + s_ClassType->m_ClassType->m_Name + "' used for a variable.").c_str());
+					throw std::exception(("Could not find class '" + s_ClassType->m_ClassType->m_Name + "' used for a variable.").c_str());
 
 				if (s_ClassTypeClass->IsAbstract())
-					throw new std::exception(("Cannot instantiate a variable of abstract type '" + s_ClassType->m_ClassType->m_Name + "'.").c_str());
+					throw std::exception(("Cannot instantiate a variable of abstract type '" + s_ClassType->m_ClassType->m_Name + "'.").c_str());
 			}
 
 			for (auto s_ID : *s_Variable->m_IDs)
 			{
-				Managers::CodeManager::Writer()->WriteInd(s_Variable->m_Type->ToString() + " " + s_ID->m_Name);
+				Managers::CodeManager::Writer()->WriteInd(s_Variable->m_Type->ToString());
+				
+				if (s_Variable->m_Type->m_Type == VariableTypes::ClassPointer)
+					Managers::CodeManager::Writer()->Write("*");
+
+				if (s_Variable->m_Type->m_Type == VariableTypes::Array)
+				{
+					auto s_Type = (ArrayVariableType*) s_Variable->m_Type;
+
+					if (s_Type->m_InnerType->m_Type == VariableTypes::ClassPointer)
+						Managers::CodeManager::Writer()->Write("*");
+				}
+
+				Managers::CodeManager::Writer()->Write(" " + s_ID->m_Name);
 
 				// If this is an array then add the element count after the variable name.
 				if (s_Variable->m_Type->m_Type == VariableTypes::Array)

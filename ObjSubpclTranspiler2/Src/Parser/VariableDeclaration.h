@@ -19,5 +19,10 @@ namespace Parser
 		VariableType* m_Type;
 	};
 
-	typedef std::vector<VariableDeclaration*> VariableSeq;
+	class VariableSeq :
+		public std::vector<VariableDeclaration*>
+	{
+	public:
+		bool HasVariable(const std::string& p_Name);
+	};
 }

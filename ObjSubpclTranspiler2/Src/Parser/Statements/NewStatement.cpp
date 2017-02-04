@@ -29,7 +29,7 @@ void NewStatement::Generate()
 	auto s_Class = Managers::ClassManager::GetClass(m_ClassName->m_Name);
 
 	if (s_Class == nullptr)
-		throw new std::exception(("Could not find class '" + m_ClassName->m_Name + "' used in a new statement.").c_str());
+		throw std::exception(("Could not find class '" + m_ClassName->m_Name + "' used in a new statement.").c_str());
 
 	std::vector<std::string> s_Arguments;
 
@@ -43,21 +43,21 @@ void NewStatement::Generate()
 		}
 	}
 
+	std::string s_ClassName = s_Class->m_Header->m_Name->m_Name;
+	std::string s_ClassType = s_ClassName + "_t";
+	std::string s_ClassCtor = s_ClassName + "__ctor";
+
 	// Generate our member expression.
 	auto s_Expression = m_LeftExpression->ToString();
 
 	// Add it as the first argument.
-	s_Arguments.insert(s_Arguments.begin(), s_Expression);
-
-	std::string s_ClassName = s_Class->m_Header->m_Name->m_Name;
-	std::string s_ClassType = s_ClassName + "_t";
-	std::string s_ClassCtor = s_ClassName + "__ctor";
+	s_Arguments.insert(s_Arguments.begin(), "(struct " + s_ClassType + "*) " + s_Expression);
 
 	// TODO: Get type of container from expression.
 	std::string s_VariableType = s_ClassType;
 
 	// Allocate the member.
-	Managers::CodeManager::Writer()->WriteLn(s_Expression + " = (" + s_VariableType + "*) malloc(sizeof(" + s_ClassType + "));");
+	Managers::CodeManager::Writer()->WriteLn(s_Expression + " = (struct " + s_VariableType + "*) malloc(sizeof(struct " + s_ClassType + "));");
 
 	// Call the constructor.
 	Managers::CodeManager::Writer()->WriteInd(s_ClassCtor + "(" + Util::Utils::Join(s_Arguments, ", ") + ")");
