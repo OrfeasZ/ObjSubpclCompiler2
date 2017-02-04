@@ -4,7 +4,7 @@
 
 #include <Parser/Procedure/Procedure.h>
 
-#include <unordered_map>
+#include <tuple>
 
 namespace Parser
 {
@@ -32,8 +32,8 @@ namespace Parser
 		bool HasVirtualMethod(const std::string& p_Name);
 
 	private:
-		std::unordered_map<std::string, Procedure*> GetAllVirtualMethods();
-		std::unordered_map<std::string, Procedure*> GetFinalVirtualMethods();
+		std::vector<std::tuple<std::string, Procedure*>> GetAllVirtualMethods();
+		std::vector<std::tuple<std::string, Procedure*>> GetFinalVirtualMethods();
 		std::vector<Procedure*> GetUniqueVirtualMethods();
 
 	private:

@@ -84,7 +84,7 @@ std::vector<Procedure*> ClassDefinition::GetMethods(ProcedureType::type p_Type)
 bool ClassDefinition::IsAbstract()
 {
 	for (auto s_Method : GetFinalVirtualMethods())
-		if (s_Method.second->m_Type == ProcedureType::Abstract)
+		if (std::get<1>(s_Method)->m_Type == ProcedureType::Abstract)
 			return true;
 
 	return false;
@@ -147,8 +147,11 @@ bool ClassDefinition::HasMethod(const std::string& p_Name, std::string& p_Method
 
 bool ClassDefinition::HasVirtualMethod(const std::string& p_Name)
 {
-	auto s_AllVirtuals = GetAllVirtualMethods();
-	return s_AllVirtuals.find(p_Name) != s_AllVirtuals.end();
+	for (auto s_Method : GetAllVirtualMethods())
+		if (std::get<0>(s_Method) == p_Name)
+			return true;
+
+	return false;
 }
 
 void ClassDefinition::GenerateForwardDeclarations(ClassDefinition* p_Parent)
@@ -212,7 +215,7 @@ void ClassDefinition::GenerateVtableTypedefs(ClassDefinition* p_Parent)
 void ClassDefinition::GenerateVtableStructure(ClassDefinition* p_Parent)
 {
 	// Get all virtual methods from parent.
-	std::unordered_map<std::string, Procedure*> s_ParentMethods;
+	std::vector<std::tuple<std::string, Procedure*>> s_ParentMethods;
 
 	if (p_Parent)
 		s_ParentMethods = p_Parent->GetAllVirtualMethods();
@@ -230,7 +233,7 @@ void ClassDefinition::GenerateVtableStructure(ClassDefinition* p_Parent)
 	Managers::CodeManager::Writer()->AddIndent();
 
 	for (auto s_Method : s_ParentMethods)
-		Managers::CodeManager::Writer()->WriteLnInd(s_Method.first + "_t " + s_Method.second->m_Header->m_Name->m_Name + ";");
+		Managers::CodeManager::Writer()->WriteLnInd(std::get<0>(s_Method) + "_t " + std::get<1>(s_Method)->m_Header->m_Name->m_Name + ";");
 
 	for (auto s_Method : s_Methods)
 		Managers::CodeManager::Writer()->WriteLnInd(m_Header->m_Name->m_Name + "__" + s_Method->m_Header->m_Name->m_Name + "_t " + s_Method->m_Header->m_Name->m_Name + ";");
@@ -243,7 +246,7 @@ void ClassDefinition::GenerateVtableStructure(ClassDefinition* p_Parent)
 void ClassDefinition::GenerateVtableVariable(ClassDefinition* p_Parent)
 {
 	// Get all virtual methods from ourselves and our parents.
-	std::unordered_map<std::string, Procedure*> s_Methods = GetFinalVirtualMethods();
+	auto s_Methods = GetFinalVirtualMethods();
 
 	if (s_Methods.size() == 0)
 		return;
@@ -256,16 +259,16 @@ void ClassDefinition::GenerateVtableVariable(ClassDefinition* p_Parent)
 
 	for (auto s_Method : s_Methods)
 	{
-		Managers::CodeManager::Writer()->WriteInd("." + s_Method.second->m_Header->m_Name->m_Name + " = ");
+		Managers::CodeManager::Writer()->WriteInd("." + std::get<1>(s_Method)->m_Header->m_Name->m_Name + " = ");
 	
-		if (s_Method.second->m_Type == ProcedureType::Abstract)
+		if (std::get<1>(s_Method)->m_Type == ProcedureType::Abstract)
 		{
 			Managers::CodeManager::Writer()->Write("NULL");
 			Managers::CodeManager::Writer()->WriteLn(",");
 		}
 		else
 		{
-			Managers::CodeManager::Writer()->Write(s_Method.first);
+			Managers::CodeManager::Writer()->Write(std::get<0>(s_Method));
 			Managers::CodeManager::Writer()->WriteLn(",");
 		}
 	}
@@ -469,9 +472,9 @@ void ClassDefinition::GenerateMethod(Procedure* p_Procedure)
 	Managers::CodeManager::Writer()->WriteLn();
 }
 
-std::unordered_map<std::string, Procedure*> ClassDefinition::GetAllVirtualMethods()
+std::vector<std::tuple<std::string, Procedure*>> ClassDefinition::GetAllVirtualMethods()
 {
-	std::unordered_map<std::string, Procedure*> s_Methods;
+	std::vector<std::tuple<std::string, Procedure*>> s_Methods;
 
 	// Add virtual methods from our parents.
 	if (m_Header->m_Extends)
@@ -480,26 +483,26 @@ std::unordered_map<std::string, Procedure*> ClassDefinition::GetAllVirtualMethod
 		auto s_ParentMethods = s_Parent->GetAllVirtualMethods();
 
 		for (auto s_Method : s_ParentMethods)
-			s_Methods[s_Method.first] = s_Method.second;
+			s_Methods.push_back(s_Method);
 	}
 
 	// And then add methods from ourselves.
 	for (auto s_Method : GetUniqueVirtualMethods())
-		s_Methods[m_Header->m_Name->m_Name + "__" + s_Method->m_Header->m_Name->m_Name] = s_Method;
+		s_Methods.push_back(std::make_tuple(m_Header->m_Name->m_Name + "__" + s_Method->m_Header->m_Name->m_Name, s_Method));
 
 	return s_Methods;
 }
 
-std::unordered_map<std::string, Procedure*> ClassDefinition::GetFinalVirtualMethods()
+std::vector<std::tuple<std::string, Procedure*>> ClassDefinition::GetFinalVirtualMethods()
 {
-	std::unordered_map<std::string, Procedure*> s_AllMethods = GetAllVirtualMethods();
-	std::unordered_map<std::string, Procedure*> s_FinalMethods;
+	std::vector<std::tuple<std::string, Procedure*>> s_AllMethods = GetAllVirtualMethods();
+	std::vector<std::tuple<std::string, Procedure*>> s_FinalMethods;
 
 	for (auto s_VirtualMethod : s_AllMethods)
 	{
 		if (!m_Body->m_Procedures)
 		{
-			s_FinalMethods[s_VirtualMethod.first] = s_VirtualMethod.second;
+			s_FinalMethods.push_back(s_VirtualMethod);
 			continue;
 		}
 
@@ -510,10 +513,10 @@ std::unordered_map<std::string, Procedure*> ClassDefinition::GetFinalVirtualMeth
 			if (s_Method->m_Type == ProcedureType::Abstract)
 				continue;
 
-			if (s_Method->m_Header->m_Name->m_Name == s_VirtualMethod.second->m_Header->m_Name->m_Name)
+			if (s_Method->m_Header->m_Name->m_Name == std::get<1>(s_VirtualMethod)->m_Header->m_Name->m_Name)
 			{
 				s_MethodFound = true;
-				s_FinalMethods[m_Header->m_Name->m_Name + "__" + s_Method->m_Header->m_Name->m_Name] = s_Method;
+				s_FinalMethods.push_back(std::make_tuple(m_Header->m_Name->m_Name + "__" + s_Method->m_Header->m_Name->m_Name, s_Method));
 				break;
 			}
 		}
@@ -521,7 +524,7 @@ std::unordered_map<std::string, Procedure*> ClassDefinition::GetFinalVirtualMeth
 		if (s_MethodFound)
 			continue;
 
-		s_FinalMethods[s_VirtualMethod.first] = s_VirtualMethod.second;
+		s_FinalMethods.push_back(s_VirtualMethod);
 	}
 	
 	return s_FinalMethods;
@@ -555,7 +558,7 @@ std::vector<Procedure*> ClassDefinition::GetUniqueVirtualMethods()
 	std::copy_if(s_FinalMethods.begin(), s_FinalMethods.end(), std::back_inserter(s_FilteredMethods), [s_ParentMethods](Procedure* p_Procedure)
 	{
 		for (auto s_ParentMethod : s_ParentMethods)
-			if (s_ParentMethod.second->m_Header->m_Name->m_Name == p_Procedure->m_Header->m_Name->m_Name)
+			if (std::get<1>(s_ParentMethod)->m_Header->m_Name->m_Name == p_Procedure->m_Header->m_Name->m_Name)
 				return false;
 
 		return true;
