@@ -48,11 +48,13 @@ return 					return(RETURN);
 then 					return(THEN);
 var 					return(VAR);
 while 					return(WHILE);
+
 class					return(CLASS);
 extends					return(EXTENDS);
 constructor				return(CONSTRUCTOR);
 abstract				return(ABSTRACT);
 dynamic					return(DYNAMIC);
+new						return(NEW);
 
 "("						return(LPAREN);
 ")"						return(RPAREN);
@@ -73,6 +75,7 @@ dynamic					return(DYNAMIC);
 ">="					return(GTE);
 "["						return(LBRACK);
 "]"						return(RBRACK);
+"$"						return(POINTER);
 
 {unsigned_integer}		yylval.string = new std::string(yytext, yyleng); return(UNSIGNED_INTEGER);
 {id}					yylval.string = new std::string(yytext, yyleng); return(IDENTIFIER);
