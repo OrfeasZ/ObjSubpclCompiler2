@@ -216,7 +216,6 @@ r_value
 	| binop { $$ = $1; }
 	;
 
-// TODO: Verify this works.
 call
 	: id LPAREN RPAREN { $$ = new Call($1); }
 	| id LPAREN expr_seq RPAREN { $$ = new Call($1, $3); }

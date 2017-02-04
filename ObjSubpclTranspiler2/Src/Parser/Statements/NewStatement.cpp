@@ -31,6 +31,9 @@ void NewStatement::Generate()
 	if (s_Class == nullptr)
 		throw std::exception(("Could not find class '" + m_ClassName->m_Name + "' used in a new statement.").c_str());
 
+	if (s_Class->IsAbstract())
+		throw std::exception(("Cannot instantiate abstract class '" + m_ClassName->m_Name + "'.").c_str());
+
 	std::vector<std::string> s_Arguments;
 
 	// Serialize our arguments.

@@ -4,6 +4,8 @@
 
 #include <Parser/Procedure/Procedure.h>
 
+#include <unordered_map>
+
 namespace Parser
 {
 	class Procedure;
@@ -29,9 +31,19 @@ namespace Parser
 		bool HasMethod(const std::string& p_Name, bool& p_Virtual, bool p_CheckParent = false);
 
 	private:
+		std::unordered_map<std::string, Procedure*> GetAllVirtualMethods();
+		std::unordered_map<std::string, Procedure*> GetFinalVirtualMethods();
+		std::vector<Procedure*> GetUniqueVirtualMethods();
+
+	private:
 		void GenerateStruct(ClassDefinition* p_Parent);
 		void GenerateForwardDeclarations(ClassDefinition* p_Parent);
+
 		void GenerateVtable(ClassDefinition* p_Parent);
+		void GenerateVtableTypedefs(ClassDefinition* p_Parent);
+		void GenerateVtableStructure(ClassDefinition* p_Parent);
+		void GenerateVtableVariable(ClassDefinition* p_Parent);
+
 		void GenerateConstructor(ClassDefinition* p_Parent);
 		void GenerateMethods(ClassDefinition* p_Parent);
 		void GenerateMethod(Procedure* p_Procedure);

@@ -20,7 +20,7 @@ program something;
 			age := animalAge;
 		end;
 
-		abstract procedure getType();
+		abstract procedure calculateType();
 
 		dynamic procedure calculateHumanAge();
 		begin
@@ -36,7 +36,7 @@ program something;
 			super.ctor(animalAge);
 		end;
 
-		procedure getType();
+		procedure calculateType();
 		begin
 			type := 1;
 		end;
@@ -57,7 +57,7 @@ program something;
 			super.ctor(animalAge);
 		end;
 
-		procedure getType();
+		procedure calculateType();
 		begin
 			type := 2;
 		end;
@@ -78,7 +78,7 @@ program something;
 			super.ctor(animalAge);
 		end;
 
-		procedure getType();
+		procedure calculateType();
 		begin
 			type := 3;
 		end;
@@ -94,9 +94,16 @@ program something;
 
 		procedure print(animal : $Animal);
 		begin
+			/* Calculate the animal type */
+			animal.calculateType();
+
 			if animal.type = 0 then
 				return;
 
+			/* Calculate the animal human age */
+			animal.calculateHumanAge();
+
+			/* Print animal details */
 			PrintOut(animal.type);
 			PrintOut(animal.age);
 			PrintOut(animal.humanAge);

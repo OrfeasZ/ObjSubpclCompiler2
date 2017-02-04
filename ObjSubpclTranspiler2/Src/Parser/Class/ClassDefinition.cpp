@@ -20,6 +20,7 @@
 #include <Util/Utils.h>
 
 #include <algorithm>
+#include <iterator>
 
 using namespace Parser;
 
@@ -80,7 +81,11 @@ std::vector<Procedure*> ClassDefinition::GetMethods(ProcedureType::type p_Type)
 
 bool ClassDefinition::IsAbstract()
 {
-	return GetMethods(ProcedureType::Abstract).size() > 0;
+	for (auto s_Method : GetFinalVirtualMethods())
+		if (s_Method.second->m_Type == ProcedureType::Abstract)
+			return true;
+
+	return false;
 }
 
 bool ClassDefinition::HasMember(const std::string& p_Name)
@@ -169,23 +174,16 @@ void ClassDefinition::GenerateForwardDeclarations(ClassDefinition* p_Parent)
 
 void ClassDefinition::GenerateVtable(ClassDefinition* p_Parent)
 {
-	// TODO: Split these into separate functions when I stop being lazy.
+	GenerateVtableTypedefs(p_Parent);
+	GenerateVtableStructure(p_Parent);
+	GenerateVtableVariable(p_Parent);
+}
 
-	// Get methods and sort alphabetically (for sanity's sake).
-	// TODO: Do we also need the methods of our parent?
-	// TODO: Handle abstract as pure virtual.
-	auto s_Methods = GetMethods(ProcedureType::Dynamic);
-
-	if (s_Methods.size() == 0)
-		return;
-
-	std::sort(s_Methods.begin(), s_Methods.end(), [](const Procedure* p_Left, const Procedure* p_Right) 
-	{ 
-		return p_Left->m_Header->m_Name->m_Name < p_Right->m_Header->m_Name->m_Name; 
-	});
+void ClassDefinition::GenerateVtableTypedefs(ClassDefinition* p_Parent)
+{
+	auto s_Methods = GetUniqueVirtualMethods();
 
 	// Generate method typedefs.
-	// TODO: Make sure we don't have any additional virtual functions or handle them appropriately.
 	Managers::CodeManager::Writer()->WriteLnInd("// Vtable method descriptors for class " + m_Header->m_Name->m_Name);
 
 	for (auto s_Method : s_Methods)
@@ -201,12 +199,30 @@ void ClassDefinition::GenerateVtable(ClassDefinition* p_Parent)
 	}
 
 	Managers::CodeManager::Writer()->WriteLn();
-	
+}
+
+void ClassDefinition::GenerateVtableStructure(ClassDefinition* p_Parent)
+{
+	// Get all virtual methods from parent.
+	std::unordered_map<std::string, Procedure*> s_ParentMethods;
+
+	if (p_Parent)
+		s_ParentMethods = p_Parent->GetAllVirtualMethods();
+
+	// Get methods from ourselves.
+	auto s_Methods = GetUniqueVirtualMethods();
+
+	if (s_ParentMethods.size() == 0 && s_Methods.size() == 0)
+		return;
+
 	// Write the vtable structure.
 	Managers::CodeManager::Writer()->WriteLnInd("// Vtable descriptor for class " + m_Header->m_Name->m_Name);
 	Managers::CodeManager::Writer()->WriteLnInd("struct " + m_Header->m_Name->m_Name + "_vtbl_t");
 	Managers::CodeManager::Writer()->WriteLnInd("{");
 	Managers::CodeManager::Writer()->AddIndent();
+
+	for (auto s_Method : s_ParentMethods)
+		Managers::CodeManager::Writer()->WriteLnInd(s_Method.first + "_t " + s_Method.second->m_Header->m_Name->m_Name + ";");
 
 	for (auto s_Method : s_Methods)
 		Managers::CodeManager::Writer()->WriteLnInd(m_Header->m_Name->m_Name + "__" + s_Method->m_Header->m_Name->m_Name + "_t " + s_Method->m_Header->m_Name->m_Name + ";");
@@ -214,7 +230,16 @@ void ClassDefinition::GenerateVtable(ClassDefinition* p_Parent)
 	Managers::CodeManager::Writer()->RemoveIndent();
 	Managers::CodeManager::Writer()->WriteLnInd("};");
 	Managers::CodeManager::Writer()->WriteLn();
+}
 
+void ClassDefinition::GenerateVtableVariable(ClassDefinition* p_Parent)
+{
+	// Get all virtual methods from ourselves and our parents.
+	std::unordered_map<std::string, Procedure*> s_Methods = GetFinalVirtualMethods();
+
+	if (s_Methods.size() == 0)
+		return;
+	
 	// Write the static vtable variable.
 	Managers::CodeManager::Writer()->WriteLnInd("// Static vtable for class " + m_Header->m_Name->m_Name);
 	Managers::CodeManager::Writer()->WriteLnInd("static struct " + m_Header->m_Name->m_Name + "_vtbl_t " + m_Header->m_Name->m_Name + "_vtblptr = ");
@@ -223,9 +248,18 @@ void ClassDefinition::GenerateVtable(ClassDefinition* p_Parent)
 
 	for (auto s_Method : s_Methods)
 	{
-		Managers::CodeManager::Writer()->WriteInd("." + s_Method->m_Header->m_Name->m_Name + " = ");
-		Managers::CodeManager::Writer()->Write("(" + m_Header->m_Name->m_Name + "__" + s_Method->m_Header->m_Name->m_Name + "_t) " + m_Header->m_Name->m_Name + "__" + s_Method->m_Header->m_Name->m_Name);
-		Managers::CodeManager::Writer()->WriteLn(",");
+		Managers::CodeManager::Writer()->WriteInd("." + s_Method.second->m_Header->m_Name->m_Name + " = ");
+	
+		if (s_Method.second->m_Type == ProcedureType::Abstract)
+		{
+			Managers::CodeManager::Writer()->Write("NULL");
+			Managers::CodeManager::Writer()->WriteLn(",");
+		}
+		else
+		{
+			Managers::CodeManager::Writer()->Write(s_Method.first);
+			Managers::CodeManager::Writer()->WriteLn(",");
+		}
 	}
 
 	Managers::CodeManager::Writer()->RemoveIndent();
@@ -240,13 +274,12 @@ void ClassDefinition::GenerateStruct(ClassDefinition* p_Parent)
 	Managers::CodeManager::Writer()->AddIndent();
 
 	// Write our vtable variable.
-	if (GetMethods(ProcedureType::Dynamic).size() > 0)
+	// Write only if our parent doesn't have a vtable himself.
+	if (GetUniqueVirtualMethods().size() > 0 && (p_Parent == nullptr || p_Parent->GetAllVirtualMethods().size() == 0))
 	{
-		// TODO: Write only if our parent doesn't have a vtable himself.
 		Managers::CodeManager::Writer()->WriteLnInd("void* vtbl;");
 	}
 
-	// TODO: Make sure we don't have any additional virtual functions or handle them appropriately.
 	if (p_Parent != nullptr)
 		Managers::CodeManager::Writer()->WriteLnInd("struct " + p_Parent->m_Header->m_Name->m_Name + "_t; // Base class");
 
@@ -315,15 +348,19 @@ void ClassDefinition::GenerateConstructor(ClassDefinition* p_Parent)
 	Managers::CodeManager::Writer()->WriteLnInd("{");
 	Managers::CodeManager::Writer()->AddIndent();
 
+	// TODO: Generate constructor scoped variables.
+
 	// Clear our memory.
 	Managers::CodeManager::Writer()->WriteLnInd("memset(th, 0x00, sizeof(struct " + m_Header->m_Name->m_Name + "_t));");
+	
+	// TODO: Call constructor of parent.
+	// TODO: If parent constructor has parameters make sure we have a statement that calls his constructor.
 
 	// Init our vtable.
 	if (GetMethods(ProcedureType::Dynamic).size() > 0)
 		Managers::CodeManager::Writer()->WriteLnInd("th->vtbl = &" + m_Header->m_Name->m_Name + "_vtblptr;");
 
 	// TODO: Initialize class member variables.
-	// TODO: Generate constructor scoped variables.
 	
 	// Generate constructor statements.
 	m_Body->m_Constructor->m_Body->m_Body->SetParents(m_Body->m_Constructor->m_Header->m_Parameters, m_Body->m_Constructor->m_Body->m_Variables, this);
@@ -363,4 +400,99 @@ void ClassDefinition::GenerateMethod(Procedure* p_Procedure)
 	Managers::CodeManager::Writer()->RemoveIndent();
 	Managers::CodeManager::Writer()->WriteLnInd("}");
 	Managers::CodeManager::Writer()->WriteLn();
+}
+
+std::unordered_map<std::string, Procedure*> ClassDefinition::GetAllVirtualMethods()
+{
+	std::unordered_map<std::string, Procedure*> s_Methods;
+
+	// Add virtual methods from our parents.
+	if (m_Header->m_Extends)
+	{
+		auto s_Parent = Managers::ClassManager::GetClass(m_Header->m_Extends->m_Name);
+		auto s_ParentMethods = s_Parent->GetAllVirtualMethods();
+
+		for (auto s_Method : s_ParentMethods)
+			s_Methods[s_Method.first] = s_Method.second;
+	}
+
+	// And then add methods from ourselves.
+	for (auto s_Method : GetUniqueVirtualMethods())
+		s_Methods[m_Header->m_Name->m_Name + "__" + s_Method->m_Header->m_Name->m_Name] = s_Method;
+
+	return s_Methods;
+}
+
+std::unordered_map<std::string, Procedure*> ClassDefinition::GetFinalVirtualMethods()
+{
+	std::unordered_map<std::string, Procedure*> s_AllMethods = GetAllVirtualMethods();
+	std::unordered_map<std::string, Procedure*> s_FinalMethods;
+
+	for (auto s_VirtualMethod : s_AllMethods)
+	{
+		if (!m_Body->m_Procedures)
+		{
+			s_FinalMethods[s_VirtualMethod.first] = s_VirtualMethod.second;
+			continue;
+		}
+
+		// See if our own class has this method defined.
+		bool s_MethodFound = false;
+		for (auto s_Method : *m_Body->m_Procedures)
+		{
+			if (s_Method->m_Type == ProcedureType::Abstract)
+				continue;
+
+			if (s_Method->m_Header->m_Name->m_Name == s_VirtualMethod.second->m_Header->m_Name->m_Name)
+			{
+				s_MethodFound = true;
+				s_FinalMethods[m_Header->m_Name->m_Name + "__" + s_Method->m_Header->m_Name->m_Name] = s_Method;
+				break;
+			}
+		}
+
+		if (s_MethodFound)
+			continue;
+
+		s_FinalMethods[s_VirtualMethod.first] = s_VirtualMethod.second;
+	}
+	
+	return s_FinalMethods;
+}
+
+std::vector<Procedure*> ClassDefinition::GetUniqueVirtualMethods()
+{
+	auto s_PureVirtualMethods = GetMethods(ProcedureType::Abstract);
+	auto s_VirtualMethods = GetMethods(ProcedureType::Dynamic);
+
+	// Combine methods.
+	std::vector<Procedure*> s_FinalMethods;
+	s_FinalMethods.reserve(s_PureVirtualMethods.size() + s_VirtualMethods.size());
+	s_FinalMethods.insert(s_FinalMethods.end(), s_PureVirtualMethods.begin(), s_PureVirtualMethods.end());
+	s_FinalMethods.insert(s_FinalMethods.end(), s_VirtualMethods.begin(), s_VirtualMethods.end());
+
+	// Sort methods.
+	std::sort(s_FinalMethods.begin(), s_FinalMethods.end(), [](const Procedure* p_Left, const Procedure* p_Right)
+	{
+		return p_Left->m_Header->m_Name->m_Name < p_Right->m_Header->m_Name->m_Name;
+	});
+
+	if (m_Header->m_Extends == nullptr)
+		return s_FinalMethods;
+
+	// Remove any methods that also exist in our parents.
+	auto s_Parent = Managers::ClassManager::GetClass(m_Header->m_Extends->m_Name);
+	auto s_ParentMethods = s_Parent->GetAllVirtualMethods();
+
+	std::vector<Procedure*> s_FilteredMethods;
+	std::copy_if(s_FinalMethods.begin(), s_FinalMethods.end(), std::back_inserter(s_FilteredMethods), [s_ParentMethods](Procedure* p_Procedure)
+	{
+		for (auto s_ParentMethod : s_ParentMethods)
+			if (s_ParentMethod.second->m_Header->m_Name->m_Name == p_Procedure->m_Header->m_Name->m_Name)
+				return false;
+
+		return true;
+	});
+
+	return s_FilteredMethods;
 }

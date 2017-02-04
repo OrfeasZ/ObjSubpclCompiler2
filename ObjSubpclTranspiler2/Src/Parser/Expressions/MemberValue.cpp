@@ -21,6 +21,7 @@ std::string MemberValue::ToString()
 {
 	std::string s_String = "";
 
+	// TODO
 
 	if (m_Enclosed)
 		s_String = "(" + s_String + ")";

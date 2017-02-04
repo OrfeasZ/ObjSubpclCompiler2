@@ -42,5 +42,6 @@ std::string Identifier::GenerateMemberAccessor(GeneratableChild* p_ChildData)
 
 std::string Identifier::GenerateCallAccessor(GeneratableChild* p_ChildData)
 {
+	// Our search priority is: class -> parents -> global.
 	return "";
 }
