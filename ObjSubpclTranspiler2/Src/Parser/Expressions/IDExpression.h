@@ -13,6 +13,9 @@ namespace Parser
 		IDExpression(Identifier* p_ID);
 
 	public:
+		virtual void Generate() override;
+
+	public:
 		Identifier* m_ID;
 	};
 }

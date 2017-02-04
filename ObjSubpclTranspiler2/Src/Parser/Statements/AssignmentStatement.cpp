@@ -10,3 +10,8 @@ AssignmentStatement::AssignmentStatement(IExpression* p_LeftExpression, IExpress
 {
 
 }
+
+void AssignmentStatement::Generate()
+{
+
+}

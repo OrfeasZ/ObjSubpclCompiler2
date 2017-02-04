@@ -13,6 +13,9 @@ namespace Parser
 		Real::Real(const std::string& p_Left, const std::string& p_Right);
 
 	public:
+		virtual void Generate() override;
+
+	public:
 		double m_Value;
 	};
 }

@@ -7,3 +7,8 @@ UnaryExpression::UnaryExpression(IExpression* p_Expression, UnaryExpressions::ty
 	m_Type(p_Type)
 {
 }
+
+void UnaryExpression::Generate()
+{
+
+}

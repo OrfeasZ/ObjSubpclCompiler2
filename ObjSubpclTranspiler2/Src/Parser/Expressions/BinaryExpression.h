@@ -30,6 +30,9 @@ namespace Parser
 	{
 	public:
 		BinaryExpression(IExpression* p_Left, IExpression* p_Right, BinaryExpressions::type p_Type);
+
+	public:
+		virtual void Generate() override;
 		
 	public:
 		IExpression* m_Left;

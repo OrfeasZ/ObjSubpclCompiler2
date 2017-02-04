@@ -11,3 +11,8 @@ Call::Call(Identifier* p_Name, ExpressionSeq* p_Arguments) :
 {
 
 }
+
+void Call::Generate()
+{
+
+}

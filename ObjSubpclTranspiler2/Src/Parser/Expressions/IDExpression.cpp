@@ -9,3 +9,8 @@ IDExpression::IDExpression(Identifier* p_ID) :
 {
 
 }
+
+void IDExpression::Generate()
+{
+
+}

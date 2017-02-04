@@ -10,3 +10,8 @@ WhileStatement::WhileStatement(IExpression* p_WhileExpression, IStatement* p_DoS
 {
 
 }
+
+void WhileStatement::Generate()
+{
+
+}

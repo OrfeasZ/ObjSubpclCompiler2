@@ -4,9 +4,12 @@
 
 #include <vector>
 
+#include <Parser/GeneratableChild.h>
+
 namespace Parser
 {
-	class IStatement
+	class IStatement : 
+		public GeneratableChild
 	{
 	};
 
@@ -14,5 +17,7 @@ namespace Parser
 		public IStatement,
 		public std::vector<IStatement*>
 	{
+	public:
+		virtual void Generate() override {}
 	};
 }

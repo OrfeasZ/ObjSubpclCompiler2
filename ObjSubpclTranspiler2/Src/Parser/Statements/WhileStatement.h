@@ -13,6 +13,9 @@ namespace Parser
 		WhileStatement(IExpression* p_WhileExpression, IStatement* p_DoStatement);
 
 	public:
+		virtual void Generate() override;
+
+	public:
 		IExpression* m_WhileExpression;
 		IStatement* m_DoStatement;
 	};

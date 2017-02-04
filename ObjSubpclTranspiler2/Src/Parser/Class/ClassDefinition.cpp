@@ -103,15 +103,25 @@ bool ClassDefinition::HasMember(const std::string& p_Name)
 	return s_Parent->HasMember(p_Name);
 }
 
-bool ClassDefinition::HasMethod(const std::string& p_Name)
+bool ClassDefinition::HasMethod(const std::string& p_Name, bool& p_Virtual, bool p_CheckParent)
 {
+	p_Virtual = false;
+
 	for (auto s_Method : GetMethods(ProcedureType::Standard))
 		if (s_Method->m_Header->m_Name->m_Name == p_Name)
 			return true;
 
 	for (auto s_Method : GetMethods(ProcedureType::Dynamic))
+	{
 		if (s_Method->m_Header->m_Name->m_Name == p_Name)
+		{
+			p_Virtual = true;
 			return true;
+		}
+	}
+
+	if (!p_CheckParent)
+		return false;
 
 	// Search the parent methods.
 	if (m_Header->m_Extends == nullptr)
@@ -123,7 +133,7 @@ bool ClassDefinition::HasMethod(const std::string& p_Name)
 	if (s_Parent == nullptr)
 		return false;
 
-	return s_Parent->HasMethod(p_Name);
+	return s_Parent->HasMethod(p_Name, p_Virtual, p_CheckParent);
 }
 
 void ClassDefinition::GenerateVtable(ClassDefinition* p_Parent)

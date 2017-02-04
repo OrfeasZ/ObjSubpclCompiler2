@@ -2,9 +2,12 @@
 
 #include <Misc/StdAfx.h>
 
+#include <Parser/GeneratableChild.h>
+
 namespace Parser
 {
-	class IExpression
+	class IExpression :
+		public GeneratableChild
 	{
 	};
 

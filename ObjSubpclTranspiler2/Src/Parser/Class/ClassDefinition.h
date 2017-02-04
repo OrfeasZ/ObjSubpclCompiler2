@@ -28,7 +28,7 @@ namespace Parser
 
 		bool IsAbstract();
 		bool HasMember(const std::string& p_Name);
-		bool HasMethod(const std::string& p_Name);
+		bool HasMethod(const std::string& p_Name, bool& p_Virtual, bool p_CheckParent = false);
 
 	private:
 		void GenerateStruct(ClassDefinition* p_Parent);

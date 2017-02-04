@@ -147,6 +147,7 @@ bison -d grammar.ypp</Command>
     <ClInclude Include="Src\Misc\StdAfx.h" />
     <ClInclude Include="Src\Parser\Expressions\ArrayExpression.h" />
     <ClInclude Include="Src\Parser\ArrayVariableType.h" />
+    <ClInclude Include="Src\Parser\GeneratableChild.h" />
     <ClInclude Include="Src\Parser\Statements\AssignmentStatement.h" />
     <ClInclude Include="Src\Parser\Expressions\BinaryExpression.h" />
     <ClInclude Include="Src\Parser\Body.h" />

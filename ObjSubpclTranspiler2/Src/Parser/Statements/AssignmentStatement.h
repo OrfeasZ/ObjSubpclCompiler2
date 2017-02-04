@@ -13,6 +13,9 @@ namespace Parser
 		AssignmentStatement(IExpression* p_LeftExpression, IExpression* p_RightExpression);
 		
 	public:
+		virtual void Generate() override;
+
+	public:
 		IExpression* m_LeftExpression;
 		IExpression* m_RightExpression;
 	};
