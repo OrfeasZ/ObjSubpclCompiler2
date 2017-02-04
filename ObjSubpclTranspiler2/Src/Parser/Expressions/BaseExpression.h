@@ -23,6 +23,7 @@ namespace Parser
 
 		virtual std::string ToString() = 0;
 		virtual bool IsID() { return false; }
+		virtual std::string GetType() { return ""; }
 
 	public:
 		bool m_Enclosed;

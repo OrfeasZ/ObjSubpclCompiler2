@@ -28,8 +28,6 @@ std::string MemberCall::ToString()
 {
 	std::string s_String = "";
 
-	// TODO
-	
 	// Is this a super call?
 	bool s_SuperCall = false;
 	if (m_VariableExpression->IsID())
@@ -42,8 +40,37 @@ std::string MemberCall::ToString()
 
 	if (!s_SuperCall || m_ParentClass == nullptr)
 	{
-		m_VariableExpression->ToString();
-		// TODO: Get type of expression.
+		auto s_MemberType = m_VariableExpression->GetType();
+		auto s_MemberExpression = m_VariableExpression->ToString();
+		auto s_ClassType = Managers::ClassManager::GetClass(s_MemberType);
+
+		if (s_ClassType == nullptr)
+			throw std::exception(("Tried calling function '" + m_Name->m_Name + "' on a variable of unknown type.").c_str());
+
+		auto s_TempParent = m_ParentClass;
+		m_ParentClass = s_ClassType;
+
+		bool s_Class = true;
+		s_String += m_Name->GenerateCallAccessor(this, s_MemberExpression, s_Class);
+
+		m_ParentClass = s_TempParent;
+
+		std::vector<std::string> s_Arguments;
+
+		// Serialize our arguments.
+		if (m_Arguments)
+		{
+			for (auto s_Expression : *m_Arguments)
+			{
+				s_Expression->SetParents(this);
+				s_Arguments.push_back(s_Expression->ToString());
+			}
+		}
+
+		// This is a class call so add th as the first argument.
+		s_Arguments.insert(s_Arguments.begin(), s_MemberExpression);
+
+		s_String += "(" + Util::Utils::Join(s_Arguments, ", ") + ")";
 	}
 	else
 	{
@@ -62,27 +89,27 @@ std::string MemberCall::ToString()
 			m_ParentClass = Managers::ClassManager::GetClass(m_ParentClass->m_Header->m_Extends->m_Name);
 
 			bool s_Class = true;
-			s_String += m_Name->GenerateCallAccessor(this, s_Class);
+			s_String += m_Name->GenerateCallAccessor(this, "th", s_Class);
 
 			m_ParentClass = s_TempParent;
-		}
 
-		std::vector<std::string> s_Arguments;
+			std::vector<std::string> s_Arguments;
 
-		// Serialize our arguments.
-		if (m_Arguments)
-		{
-			for (auto s_Expression : *m_Arguments)
+			// Serialize our arguments.
+			if (m_Arguments)
 			{
-				s_Expression->SetParents(this);
-				s_Arguments.push_back(s_Expression->ToString());
+				for (auto s_Expression : *m_Arguments)
+				{
+					s_Expression->SetParents(this);
+					s_Arguments.push_back(s_Expression->ToString());
+				}
 			}
+
+			// This is a class call so add th as the first argument.
+			s_Arguments.insert(s_Arguments.begin(), "th");
+
+			s_String += "(" + Util::Utils::Join(s_Arguments, ", ") + ")";
 		}
-
-		// If this is a class call add th as the first argument.
-		s_Arguments.insert(s_Arguments.begin(), "th");
-
-		s_String += "(" + Util::Utils::Join(s_Arguments, ", ") + ")";
 	}
 
 	if (m_Enclosed)

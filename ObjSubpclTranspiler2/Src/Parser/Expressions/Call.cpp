@@ -38,7 +38,7 @@ std::string Call::ToString()
 	else
 	{
 		bool s_Class = false;
-		s_String = m_Name->GenerateCallAccessor(this, s_Class);
+		s_String = m_Name->GenerateCallAccessor(this, "th", s_Class);
 
 		std::vector<std::string> s_Arguments;
 

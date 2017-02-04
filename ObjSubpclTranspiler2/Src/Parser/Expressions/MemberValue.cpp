@@ -30,3 +30,9 @@ std::string MemberValue::ToString()
 
 	return s_String;
 }
+
+std::string MemberValue::GetType()
+{
+	// TODO: Get member value type.
+	return "";
+}

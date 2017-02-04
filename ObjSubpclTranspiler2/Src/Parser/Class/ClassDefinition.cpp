@@ -90,14 +90,23 @@ bool ClassDefinition::IsAbstract()
 	return false;
 }
 
-bool ClassDefinition::HasMember(const std::string& p_Name)
+bool ClassDefinition::HasMember(const std::string& p_Name, VariableType*& p_Type)
 {
 	// Check local variables.
 	if (m_Variables)
+	{
 		for (auto s_Variable : *m_Variables)
+		{
 			for (auto s_ID : *s_Variable->m_IDs)
+			{
 				if (s_ID->m_Name == p_Name)
+				{
+					p_Type = s_Variable->m_Type;
 					return true;
+				}
+			}
+		}
+	}
 
 	// Search the parent variables.
 	if (m_Header->m_Extends == nullptr)
@@ -109,7 +118,7 @@ bool ClassDefinition::HasMember(const std::string& p_Name)
 	if (s_Parent == nullptr)
 		return false;
 
-	return s_Parent->HasMember(p_Name);
+	return s_Parent->HasMember(p_Name, p_Type);
 }
 
 bool ClassDefinition::HasMethod(const std::string& p_Name, std::string& p_MethodName, bool p_CheckParent)
@@ -139,12 +148,7 @@ bool ClassDefinition::HasMethod(const std::string& p_Name, std::string& p_Method
 bool ClassDefinition::HasVirtualMethod(const std::string& p_Name)
 {
 	auto s_AllVirtuals = GetAllVirtualMethods();
-
-	for (auto s_Method : s_AllVirtuals)
-		if (s_Method.second->m_Header->m_Name->m_Name == p_Name)
-			return true;
-	
-	return false;
+	return s_AllVirtuals.find(p_Name) != s_AllVirtuals.end();
 }
 
 void ClassDefinition::GenerateForwardDeclarations(ClassDefinition* p_Parent)

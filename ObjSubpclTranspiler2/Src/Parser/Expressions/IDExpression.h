@@ -5,6 +5,7 @@
 namespace Parser
 {
 	class Identifier;
+	class VariableType;
 
 	class IDExpression :
 		public BaseExpression
@@ -16,6 +17,10 @@ namespace Parser
 		virtual void Generate() override;
 		virtual std::string ToString() override;
 		virtual bool IsID() override { return true; }
+		virtual std::string GetType() override;
+
+	private:
+		std::string GetTypeFromVariableType(VariableType* p_Type);
 
 	public:
 		Identifier* m_ID;

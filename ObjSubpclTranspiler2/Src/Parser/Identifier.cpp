@@ -11,28 +11,30 @@ Identifier::Identifier(const std::string& p_Name) :
 
 std::string Identifier::GenerateMemberAccessor(GeneratableChild* p_ChildData)
 {
+	VariableType* s_Type = nullptr;
+
 	// Our search priority is: block -> params -> class -> global.
 	// Search the local variables block.
-	if (p_ChildData->m_ParentVariables && p_ChildData->m_ParentVariables->HasVariable(m_Name))
+	if (p_ChildData->m_ParentVariables && p_ChildData->m_ParentVariables->HasVariable(m_Name, s_Type))
 		return m_Name;
 
 	// Search our parameters.
-	if (p_ChildData->m_ParentParameters && p_ChildData->m_ParentParameters->HasVariable(m_Name))
+	if (p_ChildData->m_ParentParameters && p_ChildData->m_ParentParameters->HasVariable(m_Name, s_Type))
 		return m_Name;
 
 	// Search the class members.
-	if (p_ChildData->m_ParentClass && p_ChildData->m_ParentClass->HasMember(m_Name))
+	if (p_ChildData->m_ParentClass && p_ChildData->m_ParentClass->HasMember(m_Name, s_Type))
 		return "th->" + m_Name;
 
 	// Search the global variables.
 	auto s_ProgramBody = Parser::ParserTree::GetProgram()->m_Body;
-	if (s_ProgramBody && s_ProgramBody->m_Variables && s_ProgramBody->m_Variables->HasVariable(m_Name))
+	if (s_ProgramBody && s_ProgramBody->m_Variables && s_ProgramBody->m_Variables->HasVariable(m_Name, s_Type))
 		return m_Name;
 
 	throw std::exception(("Use of undefined variable '" + m_Name + "'.").c_str());
 }
 
-std::string Identifier::GenerateCallAccessor(GeneratableChild* p_ChildData, bool& p_Class)
+std::string Identifier::GenerateCallAccessor(GeneratableChild* p_ChildData, const std::string& p_ClassName, bool& p_Class)
 {
 	bool s_ClassOnly = p_Class;
 
@@ -46,7 +48,7 @@ std::string Identifier::GenerateCallAccessor(GeneratableChild* p_ChildData, bool
 			return s_MethodName;
 		
 		if (p_ChildData->m_ParentClass->HasVirtualMethod(s_MethodName))
-			return "((struct " + p_ChildData->m_ParentClass->m_Header->m_Name->m_Name + "_vtbl_t*) th->vtbl)->" + m_Name;
+			return "((struct " + p_ChildData->m_ParentClass->m_Header->m_Name->m_Name + "_vtbl_t*) " + p_ClassName + "->vtbl)->" + m_Name;
 	}
 
 	if (s_ClassOnly)

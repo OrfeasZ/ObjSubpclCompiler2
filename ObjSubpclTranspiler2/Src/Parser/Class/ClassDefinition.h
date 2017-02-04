@@ -27,7 +27,7 @@ namespace Parser
 		std::vector<Procedure*> GetMethods(ProcedureType::type p_Type = ProcedureType::Standard);
 
 		bool IsAbstract();
-		bool HasMember(const std::string& p_Name);
+		bool HasMember(const std::string& p_Name, VariableType*& p_Type);
 		bool HasMethod(const std::string& p_Name, std::string& p_MethodName, bool p_CheckParent = false);
 		bool HasVirtualMethod(const std::string& p_Name);
 

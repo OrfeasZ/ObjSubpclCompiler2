@@ -23,6 +23,6 @@ namespace Parser
 		public std::vector<VariableDeclaration*>
 	{
 	public:
-		bool HasVariable(const std::string& p_Name);
+		bool HasVariable(const std::string& p_Name, VariableType*& p_Type);
 	};
 }

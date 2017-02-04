@@ -34,3 +34,8 @@ std::string ArrayExpression::ToString()
 
 	return s_String;
 }
+
+std::string ArrayExpression::GetType()
+{
+	return m_ArrayExpression->GetType();
+}
