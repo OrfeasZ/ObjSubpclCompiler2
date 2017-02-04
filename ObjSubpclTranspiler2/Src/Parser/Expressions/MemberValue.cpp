@@ -24,8 +24,6 @@ std::string MemberValue::ToString()
 {
 	std::string s_String = "";
 
-	// TODO
-
 	m_VariableExpression->SetParents(this);
 	
 	auto s_MemberType = m_VariableExpression->GetType();
@@ -51,13 +49,18 @@ std::string MemberValue::ToString()
 
 std::string MemberValue::GetType()
 {
-	// TODO: Get member value type.
 	m_VariableExpression->SetParents(this);
 
 	auto s_MemberType = m_VariableExpression->GetType();
 	auto s_ClassType = Managers::ClassManager::GetClass(s_MemberType);
 
 	if (s_ClassType == nullptr)
-		throw std::exception(("Tried access member variable '" + m_Member->m_Name + "' on a variable of unknown type.").c_str());
+		return "";
 
+	// Search the class members.
+	VariableType* s_Type;
+	if (s_ClassType->HasMember(m_Member->m_Name, s_Type))
+		return VariableType::GetTypeFromVariableType(s_Type);
+
+	return "";
 }

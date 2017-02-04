@@ -49,7 +49,7 @@ std::string BinaryExpression::ToString()
 		break;
 
 	case BinaryExpressions::Mod:
-		s_String += " %% ";
+		s_String += " % ";
 		break;
 
 	case BinaryExpressions::Or:

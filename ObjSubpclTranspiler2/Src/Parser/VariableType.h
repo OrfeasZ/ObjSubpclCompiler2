@@ -23,6 +23,7 @@ namespace Parser
 	
 	public:
 		virtual std::string ToString();
+		static std::string GetTypeFromVariableType(VariableType* p_Type);
 
 	public:
 		VariableTypes::type m_Type;
