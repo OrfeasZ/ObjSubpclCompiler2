@@ -53,11 +53,8 @@ void NewStatement::Generate()
 	// Add it as the first argument.
 	s_Arguments.insert(s_Arguments.begin(), "(struct " + s_ClassType + "*) " + s_Expression);
 
-	// TODO: Get type of container from expression.
-	std::string s_VariableType = s_ClassType;
-
 	// Allocate the member.
-	Managers::CodeManager::Writer()->WriteLn(s_Expression + " = (struct " + s_VariableType + "*) malloc(sizeof(struct " + s_ClassType + "));");
+	Managers::CodeManager::Writer()->WriteLn(s_Expression + " = malloc(sizeof(struct " + s_ClassType + "));");
 
 	// Call the constructor.
 	Managers::CodeManager::Writer()->WriteInd(s_ClassCtor + "(" + Util::Utils::Join(s_Arguments, ", ") + ")");

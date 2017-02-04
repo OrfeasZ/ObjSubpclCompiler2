@@ -145,11 +145,16 @@ void Program::GenerateMain()
 	Managers::CodeManager::Writer()->WriteLnInd("// Program entry point");
 	Managers::CodeManager::Writer()->WriteLnInd("void main()");
 	Managers::CodeManager::Writer()->WriteLnInd("{");
+	Managers::CodeManager::Writer()->AddIndent();
 
 	// TODO: Initialize global variables.
 	// TODO: Generate main scoped variables.
-	// TODO: Generate main statements.
 
+	// Generate main statements.
+	m_Body->m_Body->SetParents(nullptr, nullptr, nullptr);
+	m_Body->m_Body->Generate();
+
+	Managers::CodeManager::Writer()->RemoveIndent();
 	Managers::CodeManager::Writer()->WriteLnInd("}");
 	Managers::CodeManager::Writer()->WriteLn();
 }
