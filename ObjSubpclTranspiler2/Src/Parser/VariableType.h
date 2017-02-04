@@ -11,7 +11,8 @@ namespace Parser
 			Integer,
 			Real,
 			Array,
-			Class
+			Class,
+			ClassPointer
 		};
 	}
 

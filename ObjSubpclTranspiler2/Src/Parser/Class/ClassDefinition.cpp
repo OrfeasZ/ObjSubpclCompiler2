@@ -142,6 +142,7 @@ void ClassDefinition::GenerateVtable(ClassDefinition* p_Parent)
 
 	// Get methods and sort alphabetically (for sanity's sake).
 	// TODO: Do we also need the methods of our parent?
+	// TODO: Handle abstract as pure virtual.
 	auto s_Methods = GetMethods(ProcedureType::Dynamic);
 
 	if (s_Methods.size() == 0)
