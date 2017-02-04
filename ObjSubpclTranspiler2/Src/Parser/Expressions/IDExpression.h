@@ -1,13 +1,13 @@
 #pragma once
 
-#include "IExpression.h"
+#include "BaseExpression.h"
 
 namespace Parser
 {
 	class Identifier;
 
 	class IDExpression :
-		public IExpression
+		public BaseExpression
 	{
 	public:
 		IDExpression(Identifier* p_ID);

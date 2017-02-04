@@ -1,7 +1,7 @@
 #include "ClassVariableType.h"
 
 #include <Parser/Identifier.h>
-#include <Parser/Expressions/IExpression.h>
+#include <Parser/Expressions/BaseExpression.h>
 
 #include <Managers/ClassManager.h>
 

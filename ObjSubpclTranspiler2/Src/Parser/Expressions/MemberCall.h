@@ -10,12 +10,12 @@ namespace Parser
 		public Call
 	{
 	public:
-		MemberCall(IExpression* p_VariableExpression, Identifier* p_Name, ExpressionSeq* p_Arguments = nullptr);
+		MemberCall(BaseExpression* p_VariableExpression, Identifier* p_Name, ExpressionSeq* p_Arguments = nullptr);
 
 	public:
 		virtual void Generate() override;
 
 	public:
-		IExpression* m_VariableExpression;
+		BaseExpression* m_VariableExpression;
 	};
 }

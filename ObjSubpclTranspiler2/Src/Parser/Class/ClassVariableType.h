@@ -6,8 +6,8 @@ namespace Parser
 {
 	class Identifier;
 
-	class IExpression;
-	typedef std::vector<IExpression*> ExpressionSeq;
+	class BaseExpression;
+	typedef std::vector<BaseExpression*> ExpressionSeq;
 
 	class ClassVariableType :
 		public VariableType

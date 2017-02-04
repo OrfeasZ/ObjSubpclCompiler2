@@ -6,7 +6,7 @@
 #include "Expressions/BinaryExpression.h"
 #include "Expressions/Call.h"
 #include "Expressions/IDExpression.h"
-#include "Expressions/IExpression.h"
+#include "Expressions/BaseExpression.h"
 #include "Expressions/Integer.h"
 #include "Expressions/MemberCall.h"
 #include "Expressions/MemberValue.h"
@@ -16,12 +16,14 @@
 #include "Statements/AssignmentStatement.h"
 #include "Statements/IfStatement.h"
 #include "Statements/IStatement.h"
+#include "Statements/NewStatement.h"
 #include "Statements/ReturnStatement.h"
 #include "Statements/WhileStatement.h"
 
 #include "Class/ClassBody.h"
 #include "Class/ClassDefinition.h"
 #include "Class/ClassHeader.h"
+#include "Class/ClassVariablePointerType.h"
 #include "Class/ClassVariableType.h"
 
 #include "Procedure/Procedure.h"

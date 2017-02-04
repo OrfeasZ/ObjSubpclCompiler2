@@ -1,22 +1,22 @@
 #pragma once
 
-#include "IExpression.h"
+#include "BaseExpression.h"
 
 namespace Parser
 {
 	class Identifier;
 
 	class MemberValue :
-		public IExpression
+		public BaseExpression
 	{
 	public:
-		MemberValue(IExpression* p_VariableExpression, Identifier* p_Member);
+		MemberValue(BaseExpression* p_VariableExpression, Identifier* p_Member);
 
 	public:
 		virtual void Generate() override;
 
 	public:
-		IExpression* m_VariableExpression;
+		BaseExpression* m_VariableExpression;
 		Identifier* m_Member;
 	};
 }

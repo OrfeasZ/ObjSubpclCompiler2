@@ -1,7 +1,7 @@
 #include "Call.h"
 
 #include <Parser/Identifier.h>
-#include <Parser/Expressions/IExpression.h>
+#include <Parser/Expressions/BaseExpression.h>
 
 using namespace Parser;
 

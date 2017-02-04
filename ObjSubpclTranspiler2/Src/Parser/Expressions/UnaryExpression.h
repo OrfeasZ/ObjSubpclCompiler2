@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IExpression.h"
+#include "BaseExpression.h"
 
 namespace Parser
 {
@@ -15,16 +15,16 @@ namespace Parser
 	}
 
 	class UnaryExpression :
-		public IExpression
+		public BaseExpression
 	{
 	public:
-		UnaryExpression(IExpression* p_Expression, UnaryExpressions::type p_Type);
+		UnaryExpression(BaseExpression* p_Expression, UnaryExpressions::type p_Type);
 
 	public:
 		virtual void Generate() override;
 
 	public:
-		IExpression* m_Expression;
+		BaseExpression* m_Expression;
 		UnaryExpressions::type m_Type;
 	};
 }

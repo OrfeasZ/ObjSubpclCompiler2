@@ -1,13 +1,13 @@
 #pragma once
 
-#include "IExpression.h"
+#include "BaseExpression.h"
 
 #include <sstream>
 
 namespace Parser
 {
 	class Integer :
-		public IExpression
+		public BaseExpression
 	{
 	public:
 		Integer(const std::string& p_Value);

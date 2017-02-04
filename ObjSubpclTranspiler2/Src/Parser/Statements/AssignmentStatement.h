@@ -4,19 +4,19 @@
 
 namespace Parser
 {
-	class IExpression;
+	class BaseExpression;
 
 	class AssignmentStatement :
 		public IStatement
 	{
 	public:
-		AssignmentStatement(IExpression* p_LeftExpression, IExpression* p_RightExpression);
+		AssignmentStatement(BaseExpression* p_LeftExpression, BaseExpression* p_RightExpression);
 		
 	public:
 		virtual void Generate() override;
 
 	public:
-		IExpression* m_LeftExpression;
-		IExpression* m_RightExpression;
+		BaseExpression* m_LeftExpression;
+		BaseExpression* m_RightExpression;
 	};
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IExpression.h"
+#include "BaseExpression.h"
 #include <Parser/Statements/IStatement.h>
 
 namespace Parser
@@ -8,7 +8,7 @@ namespace Parser
 	class Identifier;
 
 	class Call :
-		public IExpression,
+		public BaseExpression,
 		public IStatement
 	{
 	public:

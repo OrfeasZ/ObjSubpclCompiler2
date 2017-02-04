@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IExpression.h"
+#include "BaseExpression.h"
 
 namespace Parser
 {
@@ -26,17 +26,17 @@ namespace Parser
 	}
 
 	class BinaryExpression :
-		public IExpression
+		public BaseExpression
 	{
 	public:
-		BinaryExpression(IExpression* p_Left, IExpression* p_Right, BinaryExpressions::type p_Type);
+		BinaryExpression(BaseExpression* p_Left, BaseExpression* p_Right, BinaryExpressions::type p_Type);
 
 	public:
 		virtual void Generate() override;
 		
 	public:
-		IExpression* m_Left;
-		IExpression* m_Right;
+		BaseExpression* m_Left;
+		BaseExpression* m_Right;
 		BinaryExpressions::type m_Type;
 	};
 }

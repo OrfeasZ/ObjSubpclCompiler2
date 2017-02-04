@@ -1,10 +1,10 @@
 #include "AssignmentStatement.h"
 
-#include <Parser/Expressions/IExpression.h>
+#include <Parser/Expressions/BaseExpression.h>
 
 using namespace Parser;
 
-AssignmentStatement::AssignmentStatement(IExpression* p_LeftExpression, IExpression* p_RightExpression) :
+AssignmentStatement::AssignmentStatement(BaseExpression* p_LeftExpression, BaseExpression* p_RightExpression) :
 	m_LeftExpression(p_LeftExpression),
 	m_RightExpression(p_RightExpression)
 {
