@@ -1,6 +1,7 @@
 program something;
 	var animals : array[3] of $Animal;
 		printer : AnimalPrinter();
+		count : integer;
 
 	procedure CreateAnimals(dogAge, catAge, tortAge : real);
 	begin
@@ -93,6 +94,9 @@ program something;
 
 		procedure print(animal : $Animal);
 		begin
+			if animal.type = 0 then
+				return;
+
 			PrintOut(animal.type);
 			PrintOut(animal.age);
 			PrintOut(animal.humanAge);
@@ -101,9 +105,12 @@ program something;
 
 	begin
 		CreateAnimals();
-		
-		printer.print(animals[0]);
-		printer.print(animals[1]);
-		printer.print(animals[2]);
+
+		count := 0;
+		while count < 3 do
+		begin
+			printer.print(animals[count]);
+			count := count + 1;
+		end;
 	end
 .
