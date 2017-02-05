@@ -279,3 +279,5 @@ ObjSubpclTranspiler2/Src/Grammar/grammar.tab.cpp
 ObjSubpclTranspiler2/Src/Grammar/grammar.tab.hpp
 ObjSubpclTranspiler2/Src/Grammar/lex.yy.cpp
 *.opcl.c
+ObjSubpclTranspiler2/ObjSubpclTranspiler2
+*.o
