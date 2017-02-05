@@ -52,7 +52,7 @@ std::string MemberValue::ToString()
 	auto s_ClassType = Managers::ClassManager::GetClass(s_MemberType);
 
 	if (s_ClassType == nullptr)
-		throw std::exception(("Tried access member variable '" + m_Member->m_Name + "' on a variable of unknown type.").c_str());
+		throw std::runtime_error("Tried access member variable '" + m_Member->m_Name + "' on a variable of unknown type.");
 
 	auto s_TempParent = m_ParentClass;
 	m_ParentClass = s_ClassType;

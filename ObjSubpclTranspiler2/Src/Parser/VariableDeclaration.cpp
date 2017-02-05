@@ -92,10 +92,10 @@ void VariableDeclaration::GenerateClass(const std::string& p_Name, ClassVariable
 	auto s_Class = Managers::ClassManager::GetClass(s_Type->m_ClassType->m_Name);
 
 	if (s_Class == nullptr)
-		throw std::exception(("Could not find class '" + s_Type->m_ClassType->m_Name + "' used for variable '" + p_Name + "'.").c_str());
+		throw std::runtime_error("Could not find class '" + s_Type->m_ClassType->m_Name + "' used for variable '" + p_Name + "'.");
 
 	if (s_Class->IsAbstract())
-		throw std::exception(("Cannot instantiate abstract class '" + s_Type->m_ClassType->m_Name + "'.").c_str());
+		throw std::runtime_error("Cannot instantiate abstract class '" + s_Type->m_ClassType->m_Name + "'.");
 
 	std::vector<std::string> s_Arguments;
 
@@ -161,7 +161,7 @@ void VariableDeclaration::GenerateArray(const std::string& p_Name)
 	}
 
 	case VariableTypes::Array:
-		throw std::exception("Multi-dimensional arrays are currently unsupported.");
+		throw std::runtime_error("Multi-dimensional arrays are currently unsupported.");
 	}
 }
 
@@ -197,10 +197,10 @@ void VariableDeclaration::InitializeClass(const std::string& p_Name, ClassVariab
 	auto s_Class = Managers::ClassManager::GetClass(s_Type->m_ClassType->m_Name);
 
 	if (s_Class == nullptr)
-		throw std::exception(("Could not find class '" + s_Type->m_ClassType->m_Name + "' used for variable '" + p_Name + "'.").c_str());
+		throw std::runtime_error("Could not find class '" + s_Type->m_ClassType->m_Name + "' used for variable '" + p_Name + "'.");
 
 	if (s_Class->IsAbstract())
-		throw std::exception(("Cannot instantiate abstract class '" + s_Type->m_ClassType->m_Name + "'.").c_str());
+		throw std::runtime_error("Cannot instantiate abstract class '" + s_Type->m_ClassType->m_Name + "'.");
 
 	std::vector<std::string> s_Arguments;
 
@@ -258,7 +258,7 @@ void VariableDeclaration::InitializeArray(const std::string& p_Name)
 	}
 
 	case VariableTypes::Array:
-		throw std::exception("Multi-dimensional arrays are currently unsupported.");
+		throw std::runtime_error("Multi-dimensional arrays are currently unsupported.");
 	}
 }
 

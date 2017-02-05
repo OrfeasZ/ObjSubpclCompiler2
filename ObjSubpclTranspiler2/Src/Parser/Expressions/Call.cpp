@@ -51,7 +51,7 @@ std::string Call::ToString()
 	{
 		// Make sure we have exactly one argument.
 		if (!m_Arguments || m_Arguments->size() != 1)
-			throw std::exception("PrintOut calls must have exactly 1 argument.");
+			throw std::runtime_error("PrintOut calls must have exactly 1 argument.");
 
 		(*m_Arguments)[0]->SetParents(this);
 		s_String = m_Name->m_Name + "(" + (*m_Arguments)[0]->ToString() + ")";

@@ -275,9 +275,7 @@ __pycache__/
 # tools/
 
 _build
-Src/Grammar/grammar.tab.cpp
-Src/Grammar/grammar.tab.hpp
-Src/Grammar/lex.yy.cpp
 ObjSubpclTranspiler2/Src/Grammar/grammar.tab.cpp
 ObjSubpclTranspiler2/Src/Grammar/grammar.tab.hpp
 ObjSubpclTranspiler2/Src/Grammar/lex.yy.cpp
+*.opcl.c

@@ -50,10 +50,10 @@ void NewStatement::Generate()
 	auto s_Class = Managers::ClassManager::GetClass(m_ClassName->m_Name);
 
 	if (s_Class == nullptr)
-		throw std::exception(("Could not find class '" + m_ClassName->m_Name + "' used in a new statement.").c_str());
+		throw std::runtime_error("Could not find class '" + m_ClassName->m_Name + "' used in a new statement.");
 
 	if (s_Class->IsAbstract())
-		throw std::exception(("Cannot instantiate abstract class '" + m_ClassName->m_Name + "'.").c_str());
+		throw std::runtime_error("Cannot instantiate abstract class '" + m_ClassName->m_Name + "'.");
 
 	std::vector<std::string> s_Arguments;
 

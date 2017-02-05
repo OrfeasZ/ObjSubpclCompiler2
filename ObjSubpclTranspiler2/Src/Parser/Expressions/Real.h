@@ -31,7 +31,7 @@ namespace Parser
 		public BaseExpression
 	{
 	public:
-		Real::Real(const std::string& p_Left, const std::string& p_Right);
+		Real(const std::string& p_Left, const std::string& p_Right);
 
 	public:
 		virtual void Generate() override;

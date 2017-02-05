@@ -71,11 +71,10 @@ int main(int argc, char* argv[])
 	{
 		Parser::ParserTree::GetProgram()->Generate();
 	}
-	catch (std::exception& ex)
+	catch (std::runtime_error& ex)
 	{
 		printf("Code generation failed with error:\n");
-		printf(ex.what());
-		printf("\n");
+		printf("%s\n", ex.what());
 		return 1;
 	}
 	

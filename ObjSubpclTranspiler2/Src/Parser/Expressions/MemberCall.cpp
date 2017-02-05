@@ -66,7 +66,7 @@ std::string MemberCall::ToString()
 		auto s_ClassType = Managers::ClassManager::GetClass(s_MemberType);
 
 		if (s_ClassType == nullptr)
-			throw std::exception(("Tried calling function '" + m_Name->m_Name + "' on a variable of unknown type.").c_str());
+			throw std::runtime_error("Tried calling function '" + m_Name->m_Name + "' on a variable of unknown type.");
 
 		auto s_TempParent = m_ParentClass;
 		m_ParentClass = s_ClassType;
@@ -97,7 +97,7 @@ std::string MemberCall::ToString()
 	{
 		// Special handling for super calls.
 		if (m_ParentClass->m_Header->m_Extends == nullptr)
-			throw std::exception(("Trying to call function '" + m_Name->m_Name + "' on non-existent base class.").c_str());
+			throw std::runtime_error("Trying to call function '" + m_Name->m_Name + "' on non-existent base class.");
 
 		if (m_Name->m_Name == "ctor")
 		{

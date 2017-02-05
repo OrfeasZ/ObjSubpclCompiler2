@@ -52,7 +52,7 @@ std::string Identifier::GenerateMemberAccessor(GeneratableChild* p_ChildData, co
 	if (s_ProgramBody && s_ProgramBody->m_Variables && s_ProgramBody->m_Variables->HasVariable(m_Name, s_Type))
 		return m_Name;
 
-	throw std::exception(("Use of undefined variable '" + m_Name + "'.").c_str());
+	throw std::runtime_error("Use of undefined variable '" + m_Name + "'.");
 }
 
 std::string Identifier::GenerateCallAccessor(GeneratableChild* p_ChildData, const std::string& p_ClassName, bool& p_Class)
@@ -73,7 +73,7 @@ std::string Identifier::GenerateCallAccessor(GeneratableChild* p_ChildData, cons
 	}
 
 	if (s_ClassOnly)
-		throw std::exception(("Use of undefined method '" + m_Name + "'.").c_str());
+		throw std::runtime_error("Use of undefined method '" + m_Name + "'.");
 
 	p_Class = false;
 
@@ -84,5 +84,5 @@ std::string Identifier::GenerateCallAccessor(GeneratableChild* p_ChildData, cons
 			if (s_Procedure->m_Header->m_Name->m_Name == m_Name)
 				return m_Name;
 
-	throw std::exception(("Use of undefined method '" + m_Name + "'.").c_str());
+	throw std::runtime_error("Use of undefined method '" + m_Name + "'.");
 }

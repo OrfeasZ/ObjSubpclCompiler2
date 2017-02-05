@@ -66,7 +66,7 @@ void ClassDefinition::GenerateDefinitions()
 
 		// If we have a parent set but he doesn't exist then something is wrong.
 		if (s_Parent == nullptr)
-			throw std::exception(("Could not find parent '" + m_Header->m_Extends->m_Name + "' for class '" + m_Header->m_Name->m_Name + "'.").c_str());
+			throw std::runtime_error("Could not find parent '" + m_Header->m_Extends->m_Name + "' for class '" + m_Header->m_Name->m_Name + "'.");
 	}
 
 	// Generate code for this class.
@@ -341,10 +341,10 @@ void ClassDefinition::GenerateStruct(ClassDefinition* p_Parent)
 				auto s_ClassTypeClass = Managers::ClassManager::GetClass(s_ClassType->m_ClassType->m_Name);
 
 				if (s_ClassTypeClass == nullptr)
-					throw std::exception(("Could not find class '" + s_ClassType->m_ClassType->m_Name + "' used for a variable.").c_str());
+					throw std::runtime_error("Could not find class '" + s_ClassType->m_ClassType->m_Name + "' used for a variable.");
 
 				if (s_ClassTypeClass->IsAbstract() && s_Variable->m_Type->m_Type == VariableTypes::Class)
-					throw std::exception(("Cannot instantiate a variable of abstract type '" + s_ClassType->m_ClassType->m_Name + "'.").c_str());
+					throw std::runtime_error("Cannot instantiate a variable of abstract type '" + s_ClassType->m_ClassType->m_Name + "'.");
 			}
 
 			for (auto s_ID : *s_Variable->m_IDs)
@@ -440,7 +440,7 @@ void ClassDefinition::GenerateConstructor(ClassDefinition* p_Parent)
 
 			auto s_ArgumentSize = s_MemberCall->m_Arguments ? s_MemberCall->m_Arguments->size() : 0;
 			if (s_ArgumentSize != s_ParentArgumentSize)
-				throw std::exception(("Attempting to call base constructor of '" + m_Header->m_Name->m_Name + "' with the wrong number of arguments.").c_str());
+				throw std::runtime_error("Attempting to call base constructor of '" + m_Header->m_Name->m_Name + "' with the wrong number of arguments.");
 
 			std::vector<std::string> s_Arguments;
 
@@ -466,7 +466,7 @@ void ClassDefinition::GenerateConstructor(ClassDefinition* p_Parent)
 
 		// If we haven't found one and the parent constructor has args then we're doing something wrong.
 		if (!s_HasConstructorCall && s_ParentArgumentSize > 0)
-			throw std::exception(("Constructor of class '" + m_Header->m_Name->m_Name + "' does not call base class constructor.").c_str());
+			throw std::runtime_error("Constructor of class '" + m_Header->m_Name->m_Name + "' does not call base class constructor.");
 
 		// Otherwise, if there are no arguments just generate a standard constructor call.
 		if (!s_HasConstructorCall)

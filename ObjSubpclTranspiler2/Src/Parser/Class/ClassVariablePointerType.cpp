@@ -37,7 +37,7 @@ std::string ClassVariablePointerType::ToString()
 {
 	// Check to see if the class we're referencing exists.
 	if (Managers::ClassManager::GetClass(m_ClassType->m_Name) == nullptr)
-		throw std::exception(("Could not find class '" + m_ClassType->m_Name + "' used for a variable.").c_str());
+		throw std::runtime_error("Could not find class '" + m_ClassType->m_Name + "' used for a variable.");
 
 	return "struct " + m_ClassType->m_Name + "_t";
 }
