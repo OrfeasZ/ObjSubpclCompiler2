@@ -169,15 +169,18 @@ void ClassDefinition::GenerateForwardDeclarations(ClassDefinition* p_Parent)
 		Managers::CodeManager::Writer()->WriteLnInd("void " + m_Header->m_Name->m_Name + "__ctor(" + s_FinalParameters + ");");
 	}
 
-	for (auto s_Method : *m_Body->m_Procedures)
+	if (m_Body->m_Procedures)
 	{
-		auto s_Parameters = s_Method->m_Header->GetParameters();
-		s_Parameters.insert(s_Parameters.begin(), "struct " + m_Header->m_Name->m_Name + "_t* th");
+		for (auto s_Method : *m_Body->m_Procedures)
+		{
+			auto s_Parameters = s_Method->m_Header->GetParameters();
+			s_Parameters.insert(s_Parameters.begin(), "struct " + m_Header->m_Name->m_Name + "_t* th");
 
-		auto s_FinalParameters = Util::Utils::Join(s_Parameters, ", ");
+			auto s_FinalParameters = Util::Utils::Join(s_Parameters, ", ");
 
-		// Write forward declaration.
-		Managers::CodeManager::Writer()->WriteLnInd("void " + m_Header->m_Name->m_Name + "__" + s_Method->m_Header->m_Name->m_Name + "(" + s_FinalParameters + ");");
+			// Write forward declaration.
+			Managers::CodeManager::Writer()->WriteLnInd("void " + m_Header->m_Name->m_Name + "__" + s_Method->m_Header->m_Name->m_Name + "(" + s_FinalParameters + ");");
+		}
 	}
 
 	Managers::CodeManager::Writer()->WriteLn();
@@ -316,7 +319,7 @@ void ClassDefinition::GenerateStruct(ClassDefinition* p_Parent)
 				if (s_ClassTypeClass == nullptr)
 					throw std::exception(("Could not find class '" + s_ClassType->m_ClassType->m_Name + "' used for a variable.").c_str());
 
-				if (s_ClassTypeClass->IsAbstract())
+				if (s_ClassTypeClass->IsAbstract() && s_Variable->m_Type->m_Type == VariableTypes::Class)
 					throw std::exception(("Cannot instantiate a variable of abstract type '" + s_ClassType->m_ClassType->m_Name + "'.").c_str());
 			}
 
@@ -332,7 +335,8 @@ void ClassDefinition::GenerateStruct(ClassDefinition* p_Parent)
 				{
 					auto s_Type = (ArrayVariableType*) s_Variable->m_Type;
 
-					if (s_Type->m_InnerType->m_Type == VariableTypes::ClassPointer)
+					if (s_Type->m_InnerType->m_Type == VariableTypes::ClassPointer ||
+						s_Type->m_InnerType->m_Type == VariableTypes::Class)
 						Managers::CodeManager::Writer()->Write("*");
 				}
 
@@ -373,7 +377,12 @@ void ClassDefinition::GenerateConstructor(ClassDefinition* p_Parent)
 	Managers::CodeManager::Writer()->WriteLnInd("{");
 	Managers::CodeManager::Writer()->AddIndent();
 
-	// TODO: Generate constructor scoped variables.
+	// Generate method scoped variables.
+	if (m_Body->m_Constructor->m_Body->m_Variables)
+	{
+		m_Body->m_Constructor->m_Body->m_Variables->SetParents(nullptr, nullptr, nullptr);
+		m_Body->m_Constructor->m_Body->m_Variables->Generate();
+	}
 
 	// Clear our memory.
 	Managers::CodeManager::Writer()->WriteLnInd("memset(th, 0x00, sizeof(struct " + m_Header->m_Name->m_Name + "_t));");
@@ -444,7 +453,12 @@ void ClassDefinition::GenerateConstructor(ClassDefinition* p_Parent)
 	if (GetFinalVirtualMethods().size() > 0)
 		Managers::CodeManager::Writer()->WriteLnInd("th->vtbl = &" + m_Header->m_Name->m_Name + "_vtblptr;");
 
-	// TODO: Initialize class member variables.
+	// Initialize class member variables.
+	if (m_Variables)
+	{
+		m_Variables->SetParents(nullptr, nullptr, this);
+		m_Variables->Initialize();
+	}
 	
 	// Generate constructor statements.
 	m_Body->m_Constructor->m_Body->m_Body->SetParents(m_Body->m_Constructor->m_Header->m_Parameters, m_Body->m_Constructor->m_Body->m_Variables, this);
@@ -475,8 +489,13 @@ void ClassDefinition::GenerateMethod(Procedure* p_Procedure)
 	Managers::CodeManager::Writer()->WriteLnInd("{");
 	Managers::CodeManager::Writer()->AddIndent();
 
-	// TODO: Generate method scoped variables.
-	
+	// Generate method scoped variables.
+	if (p_Procedure->m_Body->m_Variables)
+	{
+		p_Procedure->m_Body->m_Variables->SetParents(nullptr, nullptr, nullptr);
+		p_Procedure->m_Body->m_Variables->Generate();
+	}
+
 	// Generate method statements.
 	p_Procedure->m_Body->m_Body->SetParents(p_Procedure->m_Header->m_Parameters, p_Procedure->m_Body->m_Variables, this);
 	p_Procedure->m_Body->m_Body->Generate();

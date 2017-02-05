@@ -128,7 +128,12 @@ void Program::GenerateMethods()
 		Managers::CodeManager::Writer()->WriteLnInd("{");
 		Managers::CodeManager::Writer()->AddIndent();
 
-		// TODO: Generate method scoped variables.
+		// Generate method scoped variables.
+		if (s_Procedure->m_Body->m_Variables)
+		{
+			s_Procedure->m_Body->m_Variables->SetParents(nullptr, nullptr, nullptr);
+			s_Procedure->m_Body->m_Variables->Generate();
+		}
 		
 		// Generate method statements.
 		s_Procedure->m_Body->m_Body->SetParents(s_Procedure->m_Header->m_Parameters, s_Procedure->m_Body->m_Variables, nullptr);
@@ -158,8 +163,12 @@ void Program::GenerateMain()
 	Managers::CodeManager::Writer()->WriteLnInd("{");
 	Managers::CodeManager::Writer()->AddIndent();
 
-	// TODO: Initialize global variables.
-	// TODO: Generate main scoped variables.
+	// Initialize global variables.
+	if (m_Body->m_Variables)
+	{
+		m_Body->m_Variables->SetParents(nullptr, nullptr, nullptr);
+		m_Body->m_Variables->Initialize();
+	}
 
 	// Generate main statements.
 	m_Body->m_Body->SetParents(nullptr, nullptr, nullptr);

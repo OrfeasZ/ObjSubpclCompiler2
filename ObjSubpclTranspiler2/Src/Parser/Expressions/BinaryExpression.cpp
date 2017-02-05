@@ -23,6 +23,10 @@ std::string BinaryExpression::ToString()
 
 	std::string s_String = "";
 
+	// Special case for integer division.
+	if (m_Type == BinaryExpressions::Div)
+		s_String += "(long) (";
+
 	s_String += m_Left->ToString();
 
 	switch (m_Type)
@@ -44,8 +48,7 @@ std::string BinaryExpression::ToString()
 		break;
 
 	case BinaryExpressions::Div:
-		// TODO: Do we need to handle div differently?
-		s_String += " / ";
+		s_String += ") / (long) (";
 		break;
 
 	case BinaryExpressions::Mod:
@@ -86,6 +89,10 @@ std::string BinaryExpression::ToString()
 	}
 
 	s_String += m_Right->ToString();
+
+	// Special case for integer division.
+	if (m_Type == BinaryExpressions::Div)
+		s_String += ")";
 
 	if (m_Enclosed)
 		s_String = "(" + s_String + ")";
