@@ -197,6 +197,9 @@ void ClassDefinition::GenerateVtableTypedefs(ClassDefinition* p_Parent)
 {
 	auto s_Methods = GetUniqueVirtualMethods();
 
+	if (s_Methods.size() == 0)
+		return;
+
 	// Generate method typedefs.
 	Managers::CodeManager::Writer()->WriteLnInd("// Vtable method descriptors for class " + m_Header->m_Name->m_Name);
 

@@ -49,7 +49,7 @@ void Program::GenerateHeader()
 	Managers::CodeManager::Writer()->WriteLnInd("#include <stdlib.h>");
 	Managers::CodeManager::Writer()->WriteLn();
 
-	// Write our PrintOut functions.
+	// Write our PrintOut function.
 	Managers::CodeManager::Writer()->WriteLnInd("void PrintOut(double val)");
 	Managers::CodeManager::Writer()->WriteLnInd("{");
 	Managers::CodeManager::Writer()->AddIndent();
@@ -57,7 +57,6 @@ void Program::GenerateHeader()
 	Managers::CodeManager::Writer()->RemoveIndent();
 	Managers::CodeManager::Writer()->WriteLnInd("}");
 	Managers::CodeManager::Writer()->WriteLn();
-
 }
 
 void Program::GenerateClassDefinitions()

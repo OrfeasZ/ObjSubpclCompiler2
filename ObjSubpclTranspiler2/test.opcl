@@ -1,4 +1,4 @@
-program something;
+program test;
 	var animals : array[3] of $Animal;
 
 	procedure CreateAnimals(dogAge, catAge, tortAge : real);
@@ -36,7 +36,7 @@ program something;
 	begin
 		procedure constructor(animalAge : real);
 		begin
-			/* Call base constructor */
+			(* Call base constructor *)
 			super.ctor(animalAge);
 		end;
 
@@ -47,8 +47,8 @@ program something;
 
 		dynamic procedure calculateHumanAge();
 		begin
-			/* Average human lifespan is 75 years */
-			/* Average dog lifespan is 12 years */
+			(* Average human lifespan is 75 years *)
+			(* Average dog lifespan is 12 years *)
 			humanAge := (age / 12.0) * 75.0;
 		end;
 	end;
@@ -57,7 +57,7 @@ program something;
 	begin
 		procedure constructor(animalAge : real);
 		begin
-			/* Call base constructor */
+			(* Call base constructor *)
 			super.ctor(animalAge);
 		end;
 
@@ -68,8 +68,8 @@ program something;
 
 		dynamic procedure calculateHumanAge();
 		begin
-			/* Average human lifespan is 75 years */
-			/* Average cat lifespan is 16 years */
+			(* Average human lifespan is 75 years *)
+			(* Average cat lifespan is 16 years *)
 			humanAge := (age / 16.0) * 75.0;
 		end;
 	end;
@@ -78,7 +78,7 @@ program something;
 	begin
 		procedure constructor(animalAge : real);
 		begin
-			/* Call base constructor */
+			(* Call base constructor *)
 			super.ctor(animalAge);
 		end;
 
@@ -87,7 +87,7 @@ program something;
 			type := 3;
 		end;
 
-		/* Tortoises have the same average lifespan as humans, so we don't need to override anything here */
+		(* Tortoises have the same average lifespan as humans, so we don't need to override anything here *)
 	end;
 
 	class AnimalPrinter
@@ -109,16 +109,16 @@ program something;
 
 		procedure printAnimal(animal : $Animal);
 		begin
-			/* Calculate the animal type */
+			(* Calculate the animal type *)
 			animal.calculateType();
 
 			if animal.type = 0 then
 				return;
 
-			/* Calculate the animal human age */
+			(* Calculate the animal human age *)
 			animal.calculateHumanAge();
 
-			/* Print animal details */
+			(* Print animal details *)
 			PrintOut(animal.type);
 			PrintOut(animal.age);
 			PrintOut(animal.humanAge);

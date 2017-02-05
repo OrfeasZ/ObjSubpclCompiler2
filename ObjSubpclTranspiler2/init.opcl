@@ -1,0 +1,43 @@
+program init;
+	var w : TestInitializationClass();
+
+	procedure TestInitialization();
+	var a : SomeClass(12);
+		b : $SomeClass;
+		c : array[5] of SomeClass(12);
+		d : array[2] of $SomeClass;
+		x : integer;
+		y : real;
+		z : array[10] of integer;
+	begin
+
+	end;
+
+	class SomeClass
+	var x : integer;
+	begin
+		procedure constructor(a : integer);
+		begin
+			x := a;
+		end;
+	end;
+
+	class TestInitializationClass
+	var a : SomeClass(12);
+		b : $SomeClass;
+		c : array[5] of SomeClass(12);
+		d : array[2] of $SomeClass;
+		x : integer;
+		y : real;
+		z : array[10] of integer;
+	begin
+		procedure constructor();
+		begin
+			x := 9.0 div 2.0;
+		end;
+	end;
+
+	begin
+		TestInitialization();
+	end
+.

@@ -93,6 +93,7 @@ bison -d grammar.ypp</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Depends\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>libfl.a;liby.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
       <Command>cd "$(ProjectDir)Src\Grammar"

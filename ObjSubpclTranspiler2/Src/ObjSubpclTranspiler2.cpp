@@ -15,12 +15,7 @@ extern FILE* yyin;
 int main(int argc, char* argv[])
 {
 #ifdef _DEBUG
-	//yydebug = 1;
-
-	// TODO: Remove this.
-	argc = 2;
-	char* s_TempArgs[] = { argv[0], "test.opcl" };
-	argv = s_TempArgs;
+	yydebug = 1;
 #endif
 
 	if (argc != 2)
@@ -62,12 +57,10 @@ int main(int argc, char* argv[])
 		printf("\n");
 		return 1;
 	}
+	
+	printf("Transpilation finished!\n");
 
-	printf("\n");
-	printf(Managers::CodeManager::Writer()->GetBuffer().c_str());
-
-
-	std::ofstream s_SourceFile("B:\\test.c", std::ofstream::out);
+	std::ofstream s_SourceFile(std::string(argv[1]) + ".c", std::ofstream::out);
 	s_SourceFile << Managers::CodeManager::Writer()->GetBuffer();
 	s_SourceFile.flush();
 	s_SourceFile.close();
@@ -75,8 +68,6 @@ int main(int argc, char* argv[])
 	// Close the file.
 	fclose(yyin);
 	yyin = nullptr;
-
-	getchar();
 
     return 0;
 }

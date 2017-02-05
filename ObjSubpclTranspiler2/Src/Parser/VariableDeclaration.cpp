@@ -198,10 +198,18 @@ void VariableDeclaration::InitializeClass(const std::string& p_Name, ClassVariab
 	std::string s_ClassCtor = s_ClassName + "__ctor";
 
 	// Add the variable itself as the first argument.
-	s_Arguments.insert(s_Arguments.begin(), "(struct " + s_ClassType + "*) th->" + p_Name);
+	if (m_ParentClass != nullptr)
+		s_Arguments.insert(s_Arguments.begin(), "(struct " + s_ClassType + "*) th->" + p_Name);
+	else
+		s_Arguments.insert(s_Arguments.begin(), "(struct " + s_ClassType + "*) " + p_Name);
 
 	// Allocate the member.
-	Managers::CodeManager::Writer()->WriteLnInd("th->" + p_Name + " = malloc(sizeof(struct " + s_ClassType + "));");
+	if (m_ParentClass != nullptr)
+		Managers::CodeManager::Writer()->WriteInd("th->");
+	else
+		Managers::CodeManager::Writer()->WriteIndent();
+
+	Managers::CodeManager::Writer()->WriteLn(p_Name + " = malloc(sizeof(struct " + s_ClassType + "));");
 
 	// Call the constructor.
 	Managers::CodeManager::Writer()->WriteLnInd(s_ClassCtor + "(" + Util::Utils::Join(s_Arguments, ", ") + ");");

@@ -21,12 +21,12 @@ unsigned_integer		{digit}+
 
 %%
 
-"/*"					BEGIN(COMMENT);
-<COMMENT>[^/*\n]+
+"(*"					BEGIN(COMMENT);
+<COMMENT>[^\(*\n]+
 <COMMENT>\n				
 <COMMENT><<EOF>>		yyerror("EOF in comment");
-<COMMENT>"*/"			BEGIN(INITIAL);
-<COMMENT>[*/]
+<COMMENT>"*)"			BEGIN(INITIAL);
+<COMMENT>[*\)]
 
 and						return(AND);
 array 					return(ARRAY);
