@@ -1,0 +1,13 @@
+program empty;
+	class EmptyClass
+	begin
+		procedure constructor();
+		begin
+
+		end;
+	end;
+
+	begin
+
+	end
+.
