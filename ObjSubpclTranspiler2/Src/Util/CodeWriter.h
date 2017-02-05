@@ -1,6 +1,6 @@
 /*
  * ObjSubpclTranspiler
- * Copyright (c) 2016, Orfeas Zafeiris
+ * Copyright (c) 2016 - 2017, Orfeas Zafeiris
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
